@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="4dp"
+    android:foreground="?android:attr/selectableItemBackground">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="4dp">
+
+        <ImageView
+            android:id="@+id/project_customer_icon"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:cropToPadding="false"
+            android:src="@android:drawable/ic_menu_gallery"
+            android:contentDescription="Logo"/>
+
+        <TextView
+            android:id="@+id/project_list_customer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/project_list_description"
+            android:layout_marginStart="4dp"
+            android:layout_toEndOf="@+id/project_customer_icon"
+            android:text="@string/project_list_customer"/>
+
+        <TextView
+            android:id="@+id/project_list_description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_above="@+id/project_burn_progress"
+            android:layout_toEndOf="@+id/project_customer_icon"
+            android:text="@string/project_list_description"/>
+
+        <TextView
+            android:id="@+id/project_list_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:text="@string/project_list_number"/>
+
+        <ProgressBar
+            android:id="@+id/project_burn_progress"
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/project_customer_icon"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentRight="true"
+            android:progressTint="@color/project_list_progress"/>
+
+        <TextView
+            android:id="@+id/project_budget"
+            android:layout_below="@id/project_burn_progress"
+            android:layout_alignParentRight="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/project_budget"/>
+
+        <TextView
+            android:id="@+id/project_burn"
+            android:layout_below="@+id/project_burn_progress"
+            android:layout_alignParentLeft="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/project_burn"/>
+
+        <TextView
+            android:id="@+id/project_burn_percent"
+            android:layout_below="@+id/project_burn_progress"
+            android:layout_toRightOf="@+id/project_burn"
+            android:layout_toLeftOf="@+id/project_budget"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:id="@+id/project_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/project_budget"
+            android:textStyle="bold"/>
+    </RelativeLayout>
+</android.support.v7.widget.CardView>

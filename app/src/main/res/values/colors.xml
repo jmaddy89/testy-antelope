@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#114b73</color>
+    <color name="colorPrimaryDark">#002d55</color>
+    <color name="colorAccent">#e31937</color>
+
+    <!--List Item Projects Card-->
+    <color name="project_list_progress">#3bc229</color>
+    <color name="project_list_progress_over">#c22e29</color>
+</resources>
