@@ -158,14 +158,48 @@ public class MyEndpoint {
         return customers;
     }
 
+    @ApiMethod(name = "getContactList")
+    public List<CustomerContacts> getContactList() {
+
+        List<CustomerContacts> contacts = new ArrayList<>();
+        try {
+
+            Class.forName("com.mysql.jdbc.GoogleDriver");
+
+            String finalQuery = "SELECT DISTINCT customer_contact FROM aic.projects WHERE customer_contact IS NOT NULL AND customer_contact != '' ORDER BY customer_contact ASC";
+
+            try {
+                Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+                PreparedStatement stmt = conn.prepareStatement(finalQuery);
+
+                ResultSet rs = stmt.executeQuery();
+
+                //Loop through result set and set customer contact list
+                while (rs.next()) {
+                    CustomerContacts contact = new CustomerContacts();
+                    contact.setCustomerContact(rs.getString("customer_contact"));
+                    contacts.add(contact);
+                }
+            } catch(Exception e) {
+                CustomerContacts fail = new CustomerContacts();
+                fail.setCustomerContact(e.toString());
+                contacts.add(fail);
+                return contacts;
+            }
+        } catch(Exception e) {
+            CustomerContacts fail = new CustomerContacts();
+            fail.setCustomerContact(e.toString());
+            contacts.add(fail);
+            return contacts;
+        }
+        return contacts;
+    }
+
     @ApiMethod(name = "submitRFQ")
     public MyBean submitRFQ(NewProject projectInfo) {
 
         String s = null;
         int projNumber = 0;
-        String aicContact = "Jordan Maddy";
-        String aicContactInfo = "jordan.maddy@aic-company.com";
-
 
         try {
 
@@ -201,9 +235,9 @@ public class MyEndpoint {
                 stmt.setInt(1, projNumber);
                 stmt.setString(2, projectInfo.getCustomer());
                 stmt.setString(3, projectInfo.getDescription());
-                stmt.setString(4, aicContact);
+                stmt.setString(4, projectInfo.getAicContact());
                 stmt.setString(5, projectInfo.getCustomerContact());
-                stmt.setString(6, aicContactInfo);
+                stmt.setString(6, projectInfo.getAicContactInfo());
                 stmt.setString(7, folderPath);
 
                 // Execute query
@@ -222,6 +256,85 @@ public class MyEndpoint {
         }
         MyBean result = new MyBean();
         result.setData(s);
+        return result;
+    }
+
+    @ApiMethod(name="createERPEntry")
+    public MyBean createERPEntry(NewFirebaseLogin loginInfo) {
+        String name = null;
+        int erpUserId = 0;
+        String email = loginInfo.getEmail();
+        String uid = loginInfo.getUid();
+
+        try {
+
+            Class.forName("com.mysql.jdbc.GoogleDriver");
+
+            String userIdQuery = "SELECT user_id FROM aic.aic_emp_user_ci WHERE contact_type='email' AND contact_value=?";
+
+            try {
+                Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+                PreparedStatement stmt = conn.prepareStatement(userIdQuery);
+                stmt.setString(1, email);
+
+                ResultSet rs = stmt.executeQuery();
+
+                // Check for result, then set project number
+                if (rs.next()) {
+                    erpUserId = rs.getInt(1);
+                }
+
+            } catch(Exception e) {
+                MyBean userIdFail = new MyBean();
+                userIdFail.setData("Failed getting project number: " + e.toString());
+                return userIdFail;
+            }
+
+            // Update the users table with the firebase id based on the user id of the ERP
+            String createUidQuery = "UPDATE aic.aic_emp_users SET firebase_id=? WHERE id=?";
+            try {
+                //Rebuild connection and statement
+                Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+                PreparedStatement stmt = conn.prepareStatement(createUidQuery);
+
+                //Add data to fill in values corresponding with above query
+                stmt.setString(1, uid);
+                stmt.setInt(2, erpUserId);
+
+                //Execute query
+                stmt.executeUpdate();
+
+            } catch (SQLException e) {
+                MyBean sqlFail = new MyBean();
+                sqlFail.setData("Failed trying to insert: " + e.toString());
+                return sqlFail;
+            }
+
+            String userNameQuery = "SELECT CONCAT(fname, ' ', lname) FROM aic.aic_emp_users WHERE id=?";
+            try {
+                // Rebuild connection and statement
+                Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+                PreparedStatement stmt = conn.prepareStatement(userNameQuery);
+
+                // Add user id to where clause
+                stmt.setInt(1, erpUserId);
+
+                ResultSet rs = stmt.executeQuery();
+
+                if (rs.next()) {
+                    name = rs.getString(1);
+                }
+            } catch (SQLException e) {
+                MyBean sqlFail = new MyBean();
+                sqlFail.setData("Failed trying to get display name: " + e.toString());
+                return sqlFail;
+            }
+        } catch(Exception e) {
+            MyBean totalFail = new MyBean();
+            totalFail.setData("Failed loading driver: " + e.toString());
+        }
+        MyBean result = new MyBean();
+        result.setData(name);
         return result;
     }
 }

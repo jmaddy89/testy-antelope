@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "475799091734",
+    "firebase_url": "https://aic-mobile-5fdf1.firebaseio.com",
+    "project_id": "aic-mobile-5fdf1",
+    "storage_bucket": "aic-mobile-5fdf1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:475799091734:android:48ce9885e6c8c5c8",
+        "android_client_info": {
+          "package_name": "com.aic.android.aicmobile"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "475799091734-c92ic6p41mtmmakqni8pbmk2adl42d1u.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBF-yFOCXP-wO-jhJEsfXUBZCJBFsXM96U"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

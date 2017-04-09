@@ -11,18 +11,30 @@
     android:orientation="vertical">
 
 
-    <include layout="@layout/content_projects"
-             tools:layout_editor_absoluteY="0dp"
-             tools:layout_editor_absoluteX="0dp"
-             android:layout_height="wrap_content"
-             android:layout_width="match_parent"
+    <include
+        layout="@layout/content_projects"
+        tools:layout_editor_absoluteY="0dp"
+        tools:layout_editor_absoluteX="0dp"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
         android:id="@+id/content_projects"/>
 
-    <include layout="@layout/content_rfq"
-             tools:layout_editor_absoluteY="0dp"
-             tools:layout_editor_absoluteX="0dp"
+    <include
+        layout="@layout/content_time_entry"
+        android:id="@+id/content_time_entry"
+        tools:layout_editor_absoluteY="0dp"
+        tools:layout_editor_absoluteX="0dp"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
         android:layout_below="@+id/content_projects"/>
+
+    <include
+        layout="@layout/content_rfq"
+        android:id="@+id/content_rfq"
+        tools:layout_editor_absoluteY="0dp"
+        tools:layout_editor_absoluteX="0dp"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_below="@+id/content_time_entry"/>
 
 </RelativeLayout>

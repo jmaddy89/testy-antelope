@@ -7,4 +7,8 @@
     <!--List Item Projects Card-->
     <color name="project_list_progress">#3bc229</color>
     <color name="project_list_progress_over">#c22e29</color>
+
+    <!--Sign in activity-->
+    <color name="grey_100">#F5F5F5</color>
+    <color name="grey_300">#E0E0E0</color>
 </resources>

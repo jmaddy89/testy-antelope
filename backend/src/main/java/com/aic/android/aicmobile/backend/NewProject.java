@@ -1,7 +1,5 @@
 package com.aic.android.aicmobile.backend;
 
-import java.util.Date;
-
 /**
  * Created by jordan on 4/5/2017.
  * Used by RFQ Add Activity to pass information to Google Endpoints to create a new project.
@@ -10,8 +8,10 @@ import java.util.Date;
 public class NewProject {
     private String customer;
     private String description;
+    private String aicContact;
+    private String aicContactInfo;
     private String customerContact;
-    private Date rfqDueDate;
+    private String rfqDueDate;
 
     public String getCustomer() {
         return customer;
@@ -25,8 +25,16 @@ public class NewProject {
         return customerContact;
     }
 
-    public Date getRfqDueDate() {
+    public String getRfqDueDate() {
         return rfqDueDate;
+    }
+
+    public String getAicContact() {
+        return aicContact;
+    }
+
+    public String getAicContactInfo() {
+        return aicContactInfo;
     }
 
     public void setCustomer(String customer) {
@@ -41,7 +49,15 @@ public class NewProject {
         this.customerContact = customerContact;
     }
 
-    public void setRfqDueDate(Date rfqDueDate) {
+    public void setRfqDueDate(String rfqDueDate) {
         this.rfqDueDate = rfqDueDate;
+    }
+
+    public void setAicContact(String aicContact) {
+        this.aicContact = aicContact;
+    }
+
+    public void setAicContactInfo(String aicContactInfo) {
+        this.aicContactInfo = aicContactInfo;
     }
 }

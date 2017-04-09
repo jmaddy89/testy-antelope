@@ -10,12 +10,16 @@
     <string name="rfq_content_count">12 open RFQs</string>
     <string name="rfq_add_new_button">Add New</string>
 
+    <!--Content Time Entry Card-->
+    <string name="time_entry_content_title">Time Entry</string>
     <!--Add New RFQ Activity-->
     <string name="rfq_add_customer_label">Select Customer</string>
     <string name="rfq_add_description_label">Project Description</string>
     <string name="rfq_add_description_hint">Enter Description</string>
     <string name="rfq_add_customer_contact_label">Customer Contact</string>
     <string name="rfq_add_customer_contact_hint">Enter Customer Contact</string>
+    <string name="rfq_add_rfq_due_date_label">Enter RFQ Due Date</string>
+    <string name="rfq_add_rfq_due_date_button">Set Date</string>
     <string name="rfq_add_submit_button">Create RFQ</string>
 
     <!--Date Picker Fragment-->
@@ -23,6 +27,34 @@
 
     <!--Project List Fragment-->
     <string name="project_list_search">Search</string>
+
+    <!--Login Activity-->
+    <string name="label_google_sign_in">Firebase + Google Sign In</string>
+    <string name="desc_google_sign_in">Use a Google Sign In credential to authenticate with Firebase.</string>
+    <string name="google_status_fmt">Google User: %s</string>
+    <string name="google_title_text">Google Sign In</string>
+    <string name="hint_email">Email</string>
+    <string name="hint_password">Password</string>
+    <string name="desc_firebase_lockup">Firebase logo and name</string>
+    <string name="hint_user_id">User ID</string>
+    <string name="get_custom_token">Get Token</string>
+    <string name="sign_in">Sign In</string>
+    <string name="create_account">Create Account</string>
+    <string name="sign_out">Sign Out</string>
+    <string name="verify_email">Verify Email</string>
+    <string name="disconnect">Disconnect</string>
+    <string name="loading">Loading…</string>
+    <string name="custom_token">Custom Token</string>
+    <string name="signed_out">Signed Out</string>
+    <string name="token_null">Token: null</string>
+    <string name="auth_failed">Authentication failed</string>
+    <string name="firebase_status_fmt">Firebase User: %s</string>
+    <string name="firebase_user_management">Firebase User Management</string>
+    <!--<string name="default_web_client_id">AIzaSyC9qVIEhWrucdjvrb_bQpodjYY416UafrI</string>-->
+    <string name="label_emailpassword">Email/Password Authentication</string>
+    <string name="desc_emailpassword">Use an email and password to authenticate with Firebase.</string>
+    <string name="emailpassword_status_fmt">Email User: %1$s (verified: %2$b)</string>
+    <string name="emailpassword_title_text">Email and Password</string>
 
     <!--Project List Item-->
     <string name="project_list_customer">Abbott</string>

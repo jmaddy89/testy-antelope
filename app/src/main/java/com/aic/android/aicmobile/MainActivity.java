@@ -1,7 +1,9 @@
 package com.aic.android.aicmobile;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.support.annotation.VisibleForTesting;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
@@ -22,9 +24,14 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
+    @VisibleForTesting
+    public ProgressDialog mProgressDialog;
+
     private TextView mActiveProjectCount;
     private CardView mProjectCard;
+    private CardView mTimeEntryCard;
     private CardView mRFQCard;
+    private Button mAddTimeEntry;
     private Button mAddRFQ;
 
     @Override
@@ -41,8 +48,12 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        mAddTimeEntry = (Button) findViewById(R.id.time_entry_add_new_button);
+
+        //RFQ card
         mRFQCard = (CardView) findViewById(R.id.rfq_card_view);
 
+        // Add new RFQ button goes to form to add a new RFQ
         mAddRFQ = (Button) findViewById(R.id.rfq_add_new_button);
         mAddRFQ.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -57,6 +68,30 @@ public class MainActivity extends AppCompatActivity {
         //Start async task to get project count
         new getActiveProjectCount().execute();
 
+    }
+
+
+
+    public void showProgressDialog() {
+        if (mProgressDialog == null) {
+            mProgressDialog = new ProgressDialog(this);
+            mProgressDialog.setMessage(getString(R.string.loading));
+            mProgressDialog.setIndeterminate(true);
+        }
+
+        mProgressDialog.show();
+    }
+
+    public void hideProgressDialog() {
+        if (mProgressDialog != null && mProgressDialog.isShowing()) {
+            mProgressDialog.dismiss();
+        }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        hideProgressDialog();
     }
 
     //Start projects starts the project list activity
@@ -111,4 +146,6 @@ public class MainActivity extends AppCompatActivity {
             updateProjectCard(s + " active projects");
         }
     }
+
+
 }

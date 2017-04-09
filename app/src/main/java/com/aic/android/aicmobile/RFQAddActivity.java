@@ -1,6 +1,7 @@
 package com.aic.android.aicmobile;
 
 import android.app.Activity;
+import android.app.FragmentManager;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -11,19 +12,24 @@ import android.util.Log;
 import android.util.Pair;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.aic.android.aicmobile.backend.aicDataAPI.model.CustomerContacts;
 import com.aic.android.aicmobile.backend.aicDataAPI.AicDataAPI;
 import com.aic.android.aicmobile.backend.aicDataAPI.model.Customers;
 import com.aic.android.aicmobile.backend.aicDataAPI.model.NewProject;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.extensions.android.json.AndroidJsonFactory;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.io.IOException;
-import java.sql.Date;
+import java.util.Date;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,20 +37,30 @@ public class RFQAddActivity extends AppCompatActivity {
 
     private static final String TAG = "RFQAddActivity";
     private static final int REQUEST_DATE = 0;
+    private static final String DIALOG_DATE = "DialogDate";
 
     private List<String> mCustomerArray = new ArrayList<>();
+    private List<String> mContactArray = new ArrayList<>();
+
     private Spinner mCustomerSpinner;
     private ArrayAdapter<String> mCustomerAdapter;
+    private ArrayAdapter<String> mContactAdapter;
     private EditText mDescription;
-    private EditText mCustomerContact;
+    private AutoCompleteTextView mCustomerContact;
     private Context mContext = this;
     private Button mSubmitButton;
+    private Button mDateButton;
     private NewProject mNewProject = new NewProject();
+
+    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rfqadd);
+
+        // Get firebase authentication instance
+        mAuth = FirebaseAuth.getInstance();
 
         // Set up customer spinner
         mCustomerSpinner = (Spinner) findViewById(R.id.rfq_add_customer_dropdown);
@@ -52,8 +68,15 @@ public class RFQAddActivity extends AppCompatActivity {
                 android.R.layout.simple_spinner_dropdown_item, mCustomerArray);
         mCustomerSpinner.setAdapter(mCustomerAdapter);
 
+        // Set up description text box
         mDescription = (EditText) findViewById(R.id.rfq_add_edit_description);
-        mCustomerContact = (EditText) findViewById(R.id.rfq_add_edit_customer_contact);
+
+        // Set up customer contact autocomplete box
+        mCustomerContact = (AutoCompleteTextView) findViewById(R.id.rfq_add_edit_customer_contact);
+        mContactAdapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_dropdown_item_1line, mContactArray);
+        mCustomerContact.setAdapter(mContactAdapter);
+
 
         // Set up submit button
         mSubmitButton = (Button) findViewById(R.id.rfq_add_submit_button);
@@ -63,12 +86,30 @@ public class RFQAddActivity extends AppCompatActivity {
                 mNewProject.setCustomer(mCustomerSpinner.getSelectedItem().toString());
                 mNewProject.setDescription(mDescription.getText().toString());
                 mNewProject.setCustomerContact(mCustomerContact.getText().toString());
+                FirebaseUser user = mAuth.getCurrentUser();
+                mNewProject.setAicContactInfo(user.getEmail());
+                mNewProject.setAicContact(user.getDisplayName());
                 new submitRFQ().execute(new Pair<>(mContext, mNewProject));
             }
         });
 
+//        mDateButton = (Button) findViewById(R.id.rfq_add_due_date_button);
+//        mDateButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Date date = new Date();
+//                FragmentManager manager = getFragmentManager();
+//                DatePickerFragment dialog = DatePickerFragment.newInstance(date);
+//                dialog.setTargetFragment(dialog, REQUEST_DATE);
+//                dialog.show(mContext, DIALOG_DATE);
+//            }
+//        });
+
         // Call async task to load customer list dropdown
         new getCustomerList().execute();
+
+        // Call async task to load contacts list
+        new getContactList().execute();
     }
 
     @Override
@@ -79,7 +120,9 @@ public class RFQAddActivity extends AppCompatActivity {
 
         if (requestCode == REQUEST_DATE) {
             Date date = (Date) data.getSerializableExtra(DatePickerFragment.EXTRA_DATE);
-//            mNewProject.setRfqDueDate(date);
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd 00:00:00");
+            String formattedDate = dateFormat.format(date);
+            mNewProject.setRfqDueDate(formattedDate);
 
         }
     }
@@ -89,7 +132,6 @@ public class RFQAddActivity extends AppCompatActivity {
         super.onBackPressed();
         overridePendingTransition(R.anim.trans_right_in, R.anim.trans_right_out);
     }
-
 
     // Get customer list for Add RFQ Page
     public class getCustomerList extends AsyncTask<Void, Void, List<Customers>> {
@@ -113,7 +155,7 @@ public class RFQAddActivity extends AppCompatActivity {
 
             try {
                 List<Customers> raw = myApiService.getCustomerList().execute().getItems();
-                return parseItems(raw);
+                return parseCustomers(raw);
             } catch (IOException e) {
                 Log.i(TAG, "IO Exception", e);
                 List<Customers> fail = new ArrayList<>();
@@ -138,8 +180,56 @@ public class RFQAddActivity extends AppCompatActivity {
         }
     }
 
-    // Clean up response from google endpoints
-    private List<Customers> parseItems(List<Customers> raw) {
+    // Get customer list for Add RFQ Page
+    public class getContactList extends AsyncTask<Void, Void, List<CustomerContacts>> {
+        private AicDataAPI myApiService = null;
+        private ProgressDialog dialog = new ProgressDialog(mContext);
+
+        @Override
+        protected void onPreExecute() {
+            this.dialog.setMessage("Loading customers");
+            this.dialog.show();
+        }
+
+        @Override
+        protected List<CustomerContacts> doInBackground(Void... params) {
+            if (myApiService == null) {
+                AicDataAPI.Builder builder = new AicDataAPI.Builder(AndroidHttp.newCompatibleTransport(), new AndroidJsonFactory(), null)
+                        //Root url of google cloud project
+                        .setRootUrl("https://i-melody-158021.appspot.com/_ah/api/");
+                myApiService = builder.build();
+            }
+
+            try {
+                List<CustomerContacts> raw = myApiService.getContactList().execute().getItems();
+                return parseContacts(raw);
+            } catch (IOException e) {
+                Log.i(TAG, "IO Exception", e);
+                List<CustomerContacts> fail = new ArrayList<>();
+                return fail;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(List<CustomerContacts> contacts) {
+            // Dismiss loading dialog
+            if (dialog.isShowing()) {
+                dialog.dismiss();
+            }
+
+            // Loop through results and add to customer array for spinner
+            for (int i = 0; i < contacts.size(); i++) {
+                mContactArray.add(contacts.get(i).getCustomerContact());
+            }
+
+            Log.i(TAG, "Response from endpoint: " + contacts);
+            // Notify spinner of updated information
+            mContactAdapter.notifyDataSetChanged();
+        }
+    }
+
+    // Clean up response from google endpoints for customer list
+    private List<Customers> parseCustomers(List<Customers> raw) {
 
         List<Customers> customers = new ArrayList<>();
 
@@ -152,6 +242,21 @@ public class RFQAddActivity extends AppCompatActivity {
             customers.add(customer);
         }
         return customers;
+    }
+
+    // Clean up response from google endpoints for contacts autocomplete
+    private List<CustomerContacts> parseContacts(List<CustomerContacts> raw) {
+
+        List<CustomerContacts> contacts = new ArrayList<>();
+
+        for (int i = 0; i < raw.size(); i++) {
+
+            CustomerContacts contact = new CustomerContacts();
+            contact.setCustomerContact(raw.get(i).getCustomerContact());
+
+            contacts.add(contact);
+        }
+        return contacts;
     }
 
     // Get customer list for Add RFQ Page
