@@ -12,7 +12,7 @@ import com.google.api.server.spi.config.ApiMethod;
 import com.google.api.server.spi.config.ApiNamespace;
 
 
-import java.sql.Date;
+import java.util.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Connection;
@@ -336,5 +336,24 @@ public class MyEndpoint {
         MyBean result = new MyBean();
         result.setData(name);
         return result;
+    }
+
+    @ApiMethod(name="getTime")
+    public List<TimeEntryDay> getTime() {
+        List<TimeEntryDay> time = new ArrayList<>();
+        TimeEntryDay timeData = new TimeEntryDay();
+
+        Date date = new Date();
+
+        timeData.setProjectNumber(1937);
+        timeData.setCustomer("Abbott");
+        timeData.setDescription("Building stuff");
+        timeData.setBillable(true);
+        timeData.setDate(date);
+        timeData.setTime(5.5f);
+        timeData.setNote("There was a lot of work happening");
+
+        time.add(0,timeData);
+        return time;
     }
 }

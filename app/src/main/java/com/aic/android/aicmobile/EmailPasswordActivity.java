@@ -89,7 +89,7 @@ public class EmailPasswordActivity extends MainActivity implements
                 if (user != null) {
                     // User is signed in
                     Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
-                    startMainActiivty();
+                    startMainActivity();
                 } else {
                     // User is signed out
                     Log.d(TAG, "onAuthStateChanged:signed_out");
@@ -185,14 +185,18 @@ public class EmailPasswordActivity extends MainActivity implements
                                                     mStatusTextView.setText(R.string.auth_failed);
                                                 }
                                                 hideProgressDialog();
-                                                startMainActiivty();
+
+                                                // Check if sign in is successful before moving to next page
+                                                if (task.isSuccessful()) {
+                                                    startMainActivity();
+                                                }
                         // [END_EXCLUDE]
                     }
                 });
         // [END sign_in_with_email]
     }
 
-    private void startMainActiivty() {
+    private void startMainActivity() {
         Intent i = new Intent(this, MainActivity.class);
         startActivity(i);
         finish();

@@ -16,6 +16,7 @@
         </activity>
         <activity android:name=".ProjectsActivity"/>
         <activity android:name=".RFQAddActivity"/>
+        <activity android:name=".TimeEntryActivity"/>
         <activity
             android:name=".ProjectDetailActivity"
             android:label="@string/title_activity_project_detail"

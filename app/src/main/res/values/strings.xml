@@ -12,6 +12,7 @@
 
     <!--Content Time Entry Card-->
     <string name="time_entry_content_title">Time Entry</string>
+
     <!--Add New RFQ Activity-->
     <string name="rfq_add_customer_label">Select Customer</string>
     <string name="rfq_add_description_label">Project Description</string>
@@ -27,6 +28,17 @@
 
     <!--Project List Fragment-->
     <string name="project_list_search">Search</string>
+
+    <!--Time Entry Week List Item-->
+    <string name="time_entry_week_date">April 9 - 16</string>
+
+    <!--Time Entry Day Card-->
+    <string name="time_entry_day_header">Monday</string>
+    <string name="time_entry_day_add_new_button">+</string>
+
+    Time Entry Day Card Recycler View List
+    <string name="time_entry_project_description">1987-Abbott-Test</string>
+    <string name="time_entry_project_description_hours">3</string>
 
     <!--Login Activity-->
     <string name="label_google_sign_in">Firebase + Google Sign In</string>

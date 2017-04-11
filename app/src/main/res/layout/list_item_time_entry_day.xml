@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_margin="4dp"
+    android:foreground="?android:attr/selectableItemBackground">
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="4dp">
+
+        <TextView
+            android:id="@+id/time_entry_day_header"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAllCaps="true"
+            android:textStyle="bold"
+            android:text="@string/time_entry_day_header"/>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/time_entry_day_recycler_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/time_entry_day_header"
+            android:layout_alignParentStart="true">
+
+        </android.support.v7.widget.RecyclerView>
+
+        <Button
+            android:id="@+id/time_entry_day_add_new_button"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignBottom="@+id/time_entry_day_recycler_view"
+            android:text="@string/time_entry_day_add_new_button"
+            android:src="@mipmap/ic_add"
+            android:background="?android:attr/selectableItemBackground"
+            style="@style/Widget.AppCompat.Button.Borderless.Colored"/>
+
+
+    </RelativeLayout>
+
+</android.support.v7.widget.CardView>

@@ -48,6 +48,15 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        //Time Entry card, select leads to time entry activity
+        mTimeEntryCard = (CardView) findViewById(R.id.time_entry_card_view);
+        mTimeEntryCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startTimeEntry();
+            }
+        });
+
         mAddTimeEntry = (Button) findViewById(R.id.time_entry_add_new_button);
 
         //RFQ card
@@ -97,6 +106,13 @@ public class MainActivity extends AppCompatActivity {
     //Start projects starts the project list activity
     public void startProjects() {
         Intent i = new Intent(this, ProjectsActivity.class);
+        startActivity(i);
+        overridePendingTransition(R.anim.trans_left_in, R.anim.trans_left_out);
+    }
+
+    //Start time entry activty
+    public void startTimeEntry() {
+        Intent i = new Intent(this, TimeEntryActivity.class);
         startActivity(i);
         overridePendingTransition(R.anim.trans_left_in, R.anim.trans_left_out);
     }

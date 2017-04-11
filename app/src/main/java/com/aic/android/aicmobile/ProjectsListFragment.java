@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -27,9 +26,7 @@ import com.aic.android.aicmobile.backend.aicDataAPI.AicDataAPI;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.extensions.android.json.AndroidJsonFactory;
 
-import java.io.Externalizable;
 import java.io.IOException;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -61,6 +58,7 @@ public class ProjectsListFragment extends Fragment {
         setRetainInstance(true);
         //Enable options menu
         setHasOptionsMenu(true);
+
         updateItems();
     }
 
@@ -68,8 +66,11 @@ public class ProjectsListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_projects_list, container, false);
 
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+
         mProjectRecyclerView = (RecyclerView) view.findViewById(R.id.project_recycler_view);
-        mProjectRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mProjectRecyclerView.setLayoutManager(layoutManager);
+
 
 
 
