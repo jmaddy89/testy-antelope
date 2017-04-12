@@ -34,9 +34,10 @@
 
     <!--Time Entry Day Card-->
     <string name="time_entry_day_header">Monday</string>
+    <string name="time_entry_day_date">April 1</string>
     <string name="time_entry_day_add_new_button">+</string>
 
-    Time Entry Day Card Recycler View List
+    <!--Time Entry Day Card Recycler View List-->
     <string name="time_entry_project_description">1987-Abbott-Test</string>
     <string name="time_entry_project_description_hours">3</string>
 
