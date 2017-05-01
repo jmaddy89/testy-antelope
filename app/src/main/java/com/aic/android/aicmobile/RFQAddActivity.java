@@ -112,20 +112,20 @@ public class RFQAddActivity extends AppCompatActivity {
         new getContactList().execute();
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode != Activity.RESULT_OK) {
-            return;
-        }
-
-        if (requestCode == REQUEST_DATE) {
-            Date date = (Date) data.getSerializableExtra(DatePickerFragment.EXTRA_DATE);
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd 00:00:00");
-            String formattedDate = dateFormat.format(date);
-            mNewProject.setRfqDueDate(formattedDate);
-
-        }
-    }
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        if (requestCode != Activity.RESULT_OK) {
+//            return;
+//        }
+//
+//        if (requestCode == REQUEST_DATE) {
+//            Date date = (Date) data.getSerializableExtra(DatePickerFragment.EXTRA_DATE);
+//            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd 00:00:00");
+//            String formattedDate = dateFormat.format(date);
+//            mNewProject.setRfqDueDate(formattedDate);
+//
+//        }
+//    }
 
     @Override
     public void onBackPressed() {

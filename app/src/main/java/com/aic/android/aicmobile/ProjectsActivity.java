@@ -25,4 +25,6 @@ public class ProjectsActivity extends SingleFragmentActivity {
         super.onBackPressed();
         overridePendingTransition(R.anim.trans_right_in, R.anim.trans_right_out);
     }
+
+
 }

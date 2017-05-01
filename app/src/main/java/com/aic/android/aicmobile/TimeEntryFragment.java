@@ -38,17 +38,23 @@ public class TimeEntryFragment extends Fragment {
 
     private static final String TAG = "TimeEntryFragment";
 
-    private RecyclerView mTimeRecyclerView;
+//    private RecyclerView mTimeRecyclerView;
     private RecyclerView mWeekRecyclerView;
-    private RecyclerView mDayRecyclerView;
+//    private RecyclerView mDayRecyclerView;
 
-    private TimeAdapter mTimeAdapter;
+//    private TimeAdapter mTimeAdapter;
     private WeekAdapter mWeekAdapter;
     private DayAdapter mDayAdapter;
 
-    private List<TimeEntryTime> mTime = new ArrayList<>();
-    private List<TimeEntryWeek> mWeek = new ArrayList<>();
+//    private List<TimeEntryTime> mTime = new ArrayList<>();
+//    private List<TimeEntryWeek> mWeek = new ArrayList<>();
     private List<TimeEntryDay> mDay = new ArrayList<>();
+    private List<TimeEntryDay> mRawDay = new ArrayList<>();
+
+    private TextView mTimeEntryWeekDate;
+    private RecyclerView mDayRecyclerView;
+//    private WeekAdapter mWeekAdapter;
+    private List<TimeEntryWeek> mWeek = new ArrayList<>();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -59,15 +65,22 @@ public class TimeEntryFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_time_entry, container, false);
 
-        mTimeRecyclerView = (RecyclerView) view.findViewById(R.id.time_entry_recycler_view);
-        mTimeRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+//        mTimeRecyclerView = (RecyclerView) view.findViewById(R.id.time_entry_recycler_view);
+//        mTimeRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+//
+//        mTime = TimeEntryWeekLoader.initializeTimeList();
+//
+//        mTimeAdapter = new TimeAdapter(mTime);
+//        mTimeRecyclerView.setAdapter(mTimeAdapter);
+        mWeek = TimeEntryWeekLoader.initializeWeekList(17,2017);
+        mTimeEntryWeekDate = (TextView) view.findViewById(R.id.time_entry_week_date);
+        mWeekRecyclerView = (RecyclerView) view.findViewById(R.id.time_entry_week_recycler_view);
 
-        mTime = TimeEntryWeekLoader.initializeTimeList();
-
-        mTimeAdapter = new TimeAdapter(mTime);
-        mTimeRecyclerView.setAdapter(mTimeAdapter);
-
+        mWeekRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        setupWeekAdapter();
         getActivity().setTitle("Time Entry");
+
+
 
         new DownloadTime().execute();
 
@@ -87,65 +100,65 @@ public class TimeEntryFragment extends Fragment {
     /*
         Time holder and adapter, recyclerview for entire page which holds horizontal recyclerviews
      */
-    private class TimeHolder extends RecyclerView.ViewHolder {
-
-        private TextView mTimeEntryWeekDate;
+//    private class TimeHolder extends RecyclerView.ViewHolder {
+//
+//        private TextView mTimeEntryWeekDate;
 //        private RecyclerView mDayRecyclerView;
 //        private WeekAdapter mWeekAdapter;
 //        private List<TimeEntryWeek> mWeek = new ArrayList<>();
 
 
-        public TimeHolder(LayoutInflater inflater, ViewGroup parent) {
-            super(inflater.inflate(R.layout.list_item_time_entry, parent, false));
-
-            mTimeEntryWeekDate = (TextView) itemView.findViewById(R.id.time_entry_week_date);
-            mWeekRecyclerView = (RecyclerView) itemView.findViewById(R.id.time_entry_week_recycler_view);
-
-            LinearLayoutManager manager = new LinearLayoutManager(getActivity());
-            // 0 = Horizontal orientation
-            manager.setOrientation(0);
-            mWeekRecyclerView.setLayoutManager(manager);
-
-        }
-
-        public void bind(TimeEntryTime week) {
-            Calendar cal = Calendar.getInstance();
-            cal.set(Calendar.YEAR, week.getWeekYear());
-            cal.set(Calendar.WEEK_OF_YEAR, week.getWeekNumber());
-
-            SimpleDateFormat sdf = new SimpleDateFormat("MMMM dd, yyyy");
-            mTimeEntryWeekDate.setText(sdf.format(cal.getTime()));
-        }
-    }
-
-    private class TimeAdapter extends RecyclerView.Adapter<TimeHolder> {
-
-        private List<TimeEntryTime> mTime;
-
-        public TimeAdapter(List<TimeEntryTime> Time) {
-            mTime = Time;
-        }
-
-        @Override
-        public TimeHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            LayoutInflater inflater = LayoutInflater.from(getActivity());
-            return new TimeHolder(inflater, parent);
-        }
-
-        @Override
-        public void onBindViewHolder(TimeHolder holder, int position) {
-            mWeek = TimeEntryWeekLoader.initializeWeekList(mTime.get(position).getWeekNumber(),
-                    mTime.get(position).getWeekYear());
-            setupWeekAdapter();
-            TimeEntryTime time = mTime.get(position);
-            holder.bind(time);
-        }
-
-        @Override
-        public int getItemCount() {
-            return mTime.size();
-        }
-    }
+//        public TimeHolder(LayoutInflater inflater, ViewGroup parent) {
+//            super(inflater.inflate(R.layout.list_item_time_entry, parent, false));
+//
+//            mTimeEntryWeekDate = (TextView) itemView.findViewById(R.id.time_entry_week_date);
+//            mWeekRecyclerView = (RecyclerView) itemView.findViewById(R.id.time_entry_week_recycler_view);
+//
+//            LinearLayoutManager manager = new LinearLayoutManager(getActivity());
+//            // 0 = Horizontal orientation
+//            manager.setOrientation(0);
+//            mWeekRecyclerView.setLayoutManager(manager);
+//
+//        }
+//
+//        public void bind(TimeEntryTime week) {
+//            Calendar cal = Calendar.getInstance();
+//            cal.set(Calendar.YEAR, week.getWeekYear());
+//            cal.set(Calendar.WEEK_OF_YEAR, week.getWeekNumber());
+//
+//            SimpleDateFormat sdf = new SimpleDateFormat("MMMM dd, yyyy");
+//            mTimeEntryWeekDate.setText(sdf.format(cal.getTime()));
+//        }
+//    }
+//
+//    private class TimeAdapter extends RecyclerView.Adapter<TimeHolder> {
+//
+//        private List<TimeEntryTime> mTime;
+//
+//        public TimeAdapter(List<TimeEntryTime> Time) {
+//            mTime = Time;
+//        }
+//
+//        @Override
+//        public TimeHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+//            LayoutInflater inflater = LayoutInflater.from(getActivity());
+//            return new TimeHolder(inflater, parent);
+//        }
+//
+//        @Override
+//        public void onBindViewHolder(TimeHolder holder, int position) {
+//            mWeek = TimeEntryWeekLoader.initializeWeekList(mTime.get(position));
+//            mTime.set(position, mTime.get(position)).setWeekList(mWeek);
+//            setupWeekAdapter();
+//            TimeEntryTime time = mTime.get(position);
+//            holder.bind(time);
+//        }
+//
+//        @Override
+//        public int getItemCount() {
+//            return mTime.size();
+//        }
+//    }
 
     /*
         Week holder and adapter, horizontal scrolling recycler views for showing each day
@@ -169,12 +182,14 @@ public class TimeEntryFragment extends Fragment {
             mDayRecyclerView = (RecyclerView) itemView.findViewById(R.id.time_entry_day_recycler_view);
             mDayRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-            mDayAdapter = new DayAdapter(mDay);
+//            mDayAdapter = new DayAdapter(mDay);
 
-            mDayRecyclerView.setAdapter(mDayAdapter);
+//            mDayRecyclerView.setAdapter(mDayAdapter);
         }
 
         public void bind(TimeEntryWeek week) {
+
+
             mDayText.setText(week.getDayName());
             mDateText.setText(week.getDate());
         }
@@ -183,6 +198,7 @@ public class TimeEntryFragment extends Fragment {
     private class WeekAdapter extends RecyclerView.Adapter<WeekHolder> {
 
         private List<TimeEntryWeek> mWeek = new ArrayList<>();
+
 
         public WeekAdapter(List<TimeEntryWeek> week) {
             mWeek = week;
@@ -196,7 +212,12 @@ public class TimeEntryFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(WeekHolder holder, int position) {
+//            Log.i(TAG, "Calling up week holder position: " + position);
             TimeEntryWeek week = mWeek.get(position);
+            mDay = TimeEntryWeekLoader.initializeDayList(mWeek.get(position), mDay);
+
+
+
             holder.bind(week);
         }
 
@@ -220,6 +241,7 @@ public class TimeEntryFragment extends Fragment {
         }
 
         public void bind(TimeEntryDay day) {
+            Log.i(TAG, "Setting customer: " + day.getCustomer());
             mText.setText(day.getCustomer());
         }
     }
@@ -239,8 +261,9 @@ public class TimeEntryFragment extends Fragment {
         @Override
         public void onBindViewHolder(DayHolder holder, int position) {
 
-//            TimeEntryDay day = mDay.get(position);
-//            holder.bind(day);
+            Log.i(TAG, "Calling up day holder position: " + position);
+            mDay = TimeEntryWeekLoader.initializeDayList(mWeek.get(position), mDay);
+            holder.bind(mDay.get(position));
         }
 
         @Override
@@ -286,7 +309,8 @@ Asychrounous task to download project list
 
         @Override
         protected void onPostExecute(List<TimeEntryDay> s) {
-            mDay = s;
+            mRawDay = s;
+            setupWeekAdapter();
             setupDayAdapter();
 
             // Dismiss loading dialog

@@ -11,14 +11,22 @@
         android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
-
+        <activity
+            android:name=".MainActivity">
         </activity>
-        <activity android:name=".ProjectsActivity"/>
+
+        <activity
+            android:name=".ProjectsActivity"
+            android:parentActivityName=".MainActivity">
+        </activity>
+
         <activity android:name=".RFQAddActivity"/>
+
         <activity android:name=".TimeEntryActivity"/>
+
         <activity
             android:name=".ProjectDetailActivity"
+            android:parentActivityName=".ProjectsActivity"
             android:label="@string/title_activity_project_detail"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
