@@ -51,6 +51,10 @@ public class TimeEntryFragment extends Fragment {
     private RecyclerView mSundayRecyclerView;
     private RecyclerView mMondayRecyclerView;
     private RecyclerView mTuesdayRecyclerView;
+    private RecyclerView mWednesdayRecyclerView;
+    private RecyclerView mThursdayRecyclerView;
+    private RecyclerView mFridayRecyclerView;
+    private RecyclerView mSaturdayRecyclerView;
 
     private List<TimeEntryDay> mTime = new ArrayList<>();
     private List<TimeEntryDay> mRawDay = new ArrayList<>();
