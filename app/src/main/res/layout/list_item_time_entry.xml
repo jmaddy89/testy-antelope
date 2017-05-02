@@ -9,15 +9,6 @@
         android:id="@+id/time_entry_week_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/time_entry_week_date"
-        android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
-
-    <android.support.v7.widget.RecyclerView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:id="@+id/time_entry_week_recycler_view">
-
-    </android.support.v7.widget.RecyclerView>
+        android:text="@string/time_entry_week_date" />
 
 </LinearLayout>

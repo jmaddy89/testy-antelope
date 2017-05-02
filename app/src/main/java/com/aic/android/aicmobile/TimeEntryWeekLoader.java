@@ -118,18 +118,21 @@ public class TimeEntryWeekLoader {
         return week;
     }
 
-    public static List<TimeEntryDay> initializeDayList(TimeEntryWeek week, List<TimeEntryDay> dayList) {
+    public static TimeEntryDay initializeDayList(int week, List<TimeEntryDay> dayList) {
         List<TimeEntryDay> dayInfo = new ArrayList<>();
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        String weekDate = sdf.format(week.getRealDate());
-
+//        String weekDate = sdf.format(week.getRealDate());
+        TimeEntryDay day = new TimeEntryDay();
         Log.i(TAG, "Daylist size is: " + dayList.size());
+        if (dayList.size() > 0) {
+            day = dayList.get(0);
+        }
 
         int index = 0;
         for (int i = 0; i < dayList.size(); i++) {
 
-            TimeEntryDay day = new TimeEntryDay();
+
 
            String dayDate = null;
             try {
@@ -140,20 +143,20 @@ public class TimeEntryWeekLoader {
                 Log.e(TAG, "Null date: ", e);
             }
 
-            Log.i(TAG, "Week date is: " + weekDate);
-            Log.i(TAG, "Day date is: " + dayDate);
-
-            if (weekDate.equals(dayDate)) {
-                day.setCustomer(dayList.get(i).getCustomer());
-                Log.i(TAG, "This date equals: " + weekDate);
-
-                dayInfo.add(index, day);
-                index++;
-            } else {
-                Log.i(TAG, "No match found " + weekDate + " and " + dayDate);
-            }
+//            Log.i(TAG, "Week date is: " + weekDate);
+//            Log.i(TAG, "Day date is: " + dayDate);
+//
+//            if (weekDate.equals(dayDate)) {
+//                day.setCustomer(dayList.get(i).getCustomer());
+//                Log.i(TAG, "This date equals: " + weekDate);
+//
+//                dayInfo.add(index, day);
+//                index++;
+//            } else {
+//                Log.i(TAG, "No match found " + weekDate + " and " + dayDate);
+//            }
         }
-        return dayInfo;
+        return day;
     }
 }
 
