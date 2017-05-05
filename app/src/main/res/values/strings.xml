@@ -26,6 +26,9 @@
     <!--Date Picker Fragment-->
     <string name="date_picker_title">RFQ Due Date</string>
 
+    <!--Time Entry Activity-->
+    <string name="time_entry_week_label">April 30 - May 6, 2017</string>
+
     <!--Project List Fragment-->
     <string name="project_list_search">Search</string>
 

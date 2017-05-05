@@ -29,14 +29,13 @@ public class TimeEntryWeekLoader {
         int currentYear = cal.get(Calendar.YEAR);
 
         // Start at i - 4 to go back 4 weeks, then go to load future 2 weeks
-        for (int i = currentWeek - 4; i < currentWeek + 1; i++ ) {
+        for (int i = currentWeek - 6; i < currentWeek + 2; i++ ) {
             TimeEntryTime week = new TimeEntryTime();
             week.setWeekNumber(i);
             week.setWeekYear(currentYear);
-            week.setWeekList(new ArrayList<TimeEntryWeek>());
 
             // Offset to start at 0 index
-            weeks.add(i - currentWeek + 4, week);
+            weeks.add(i - currentWeek + 6, week);
         }
 
         return weeks;
@@ -118,21 +117,22 @@ public class TimeEntryWeekLoader {
         return week;
     }
 
-    public static TimeEntryDay initializeDayList(int week, List<TimeEntryDay> dayList) {
-        List<TimeEntryDay> dayInfo = new ArrayList<>();
+    public static List<TimeEntryDay> initializeDayList(int week, int day, List<TimeEntryDay> dayList) {
+        List<TimeEntryDay> returnList = new ArrayList<>();
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-//        String weekDate = sdf.format(week.getRealDate());
-        TimeEntryDay day = new TimeEntryDay();
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.WEEK_OF_YEAR, week);
+        cal.set(Calendar.DAY_OF_WEEK, day);
+        String weekDate = sdf.format(cal.getTime());
+        TimeEntryDay dayInfo = new TimeEntryDay();
         Log.i(TAG, "Daylist size is: " + dayList.size());
         if (dayList.size() > 0) {
-            day = dayList.get(0);
+            dayInfo = dayList.get(0);
         }
 
         int index = 0;
         for (int i = 0; i < dayList.size(); i++) {
-
-
 
            String dayDate = null;
             try {
@@ -143,20 +143,17 @@ public class TimeEntryWeekLoader {
                 Log.e(TAG, "Null date: ", e);
             }
 
-//            Log.i(TAG, "Week date is: " + weekDate);
-//            Log.i(TAG, "Day date is: " + dayDate);
-//
-//            if (weekDate.equals(dayDate)) {
-//                day.setCustomer(dayList.get(i).getCustomer());
-//                Log.i(TAG, "This date equals: " + weekDate);
-//
-//                dayInfo.add(index, day);
-//                index++;
-//            } else {
-//                Log.i(TAG, "No match found " + weekDate + " and " + dayDate);
-//            }
+            if (weekDate.equals(dayDate)) {
+                dayInfo.setCustomer(dayList.get(i).getCustomer());
+                Log.i(TAG, "This date equals: " + weekDate);
+
+                returnList.add(index, dayInfo);
+                index++;
+            } else {
+                Log.i(TAG, "No match found " + weekDate + " and " + dayDate);
+            }
         }
-        return day;
+        return returnList;
     }
 }
 

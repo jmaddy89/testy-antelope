@@ -10,7 +10,6 @@ public class TimeEntryTime {
 
     private int weekNumber;
     private int weekYear;
-    private List<TimeEntryWeek> weekList;
 
     public int getWeekNumber() {
         return weekNumber;
@@ -20,9 +19,6 @@ public class TimeEntryTime {
         return weekYear;
     }
 
-    public List<TimeEntryWeek> getWeekList() {
-        return weekList;
-    }
 
     public void setWeekNumber(int weekNumber) {
         this.weekNumber = weekNumber;
@@ -32,7 +28,4 @@ public class TimeEntryTime {
         this.weekYear = weekYear;
     }
 
-    public void setWeekList(List<TimeEntryWeek> weekList) {
-        this.weekList = weekList;
-    }
 }

@@ -20,10 +20,12 @@ import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.extensions.android.json.AndroidJsonFactory;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by JLM on 4/9/2017.
@@ -37,6 +39,9 @@ import java.util.List;
 public class TimeEntryFragment extends Fragment {
 
     private static final String TAG = "TimeEntryFragment";
+    private static final String ARG_WEEK_NUBMER = "week_number";
+
+    private int mWeekNumber;
 
     // Day labels
     private TextView mSundayLabel;
@@ -51,72 +56,105 @@ public class TimeEntryFragment extends Fragment {
     private RecyclerView mSundayRecyclerView;
     private RecyclerView mMondayRecyclerView;
     private RecyclerView mTuesdayRecyclerView;
+    private RecyclerView mWednesdayRecyclerView;
+    private RecyclerView mThursdayRecyclerView;
+    private RecyclerView mFridayRecyclerView;
+    private RecyclerView mSaturdayRecyclerView;
 
-    private List<TimeEntryDay> mTime = new ArrayList<>();
-    private List<TimeEntryDay> mRawDay = new ArrayList<>();
+    // Day Adapters
+    private TimeAdapter mSundayAdapter;
+    private TimeAdapter mMondayAdapter;
+    private TimeAdapter mTuesdayAdapter;
+    private TimeAdapter mWednesdayAdapter;
+    private TimeAdapter mThursdayAdapter;
+    private TimeAdapter mFridayAdapter;
+    private TimeAdapter mSaturdayAdapter;
 
-    private List<TimeEntryWeek> mWeek = new ArrayList<>();
+    // Views
+    private View mSundayCard;
+    private View mMondayCard;
+    private View mTuesdayCard;
+    private View mWednesdayCard;
+    private View mThursdayCard;
+    private View mFridayCard;
+    private View mSaturdayCard;
+
+    private List<TimeEntryDay> mDay = new ArrayList<>();
+
+    // Private adapter list setup
+    private List<TimeEntryDay> mSunday = new ArrayList<>();
+    private List<TimeEntryDay> mMonday = new ArrayList<>();
+    private List<TimeEntryDay> mTuesday = new ArrayList<>();
+    private List<TimeEntryDay> mWednesday = new ArrayList<>();
+    private List<TimeEntryDay> mThursday = new ArrayList<>();
+    private List<TimeEntryDay> mFriday = new ArrayList<>();
+    private List<TimeEntryDay> mSaturday = new ArrayList<>();
+
+    // Create new instance of fragment, called from parent view pager found in Time Entry Activity
+    public static TimeEntryFragment newInstance(int week) {
+        Bundle args = new Bundle();
+        args.putSerializable(ARG_WEEK_NUBMER, week);
+
+        TimeEntryFragment fragment = new TimeEntryFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        mWeekNumber = (int) getArguments().getSerializable(ARG_WEEK_NUBMER);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_time_entry, container, false);
 
-//        mTimeRecyclerView = (RecyclerView) view.findViewById(R.id.time_entry_recycler_view);
-//        mTimeRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-//
-//        mTime = TimeEntryWeekLoader.initializeTimeList();
-//
-//        mTimeAdapter = new TimeAdapter(mTime);
-//        mTimeRecyclerView.setAdapter(mTimeAdapter);
-        mWeek = TimeEntryWeekLoader.initializeWeekList(18,2017);
-//        mTimeEntryWeekDate = (TextView) view.findViewById(R.id.time_entry_week_date);
-//        mWeekRecyclerView = (RecyclerView) view.findViewById(R.id.time_entry_week_recycler_view);
-//
-//        mWeekRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-//        setupWeekAdapter();
+
+
+//        mWeek = TimeEntryWeekLoader.initializeWeekList(18,2017);
+
         getActivity().setTitle("Time Entry");
 
         // Create views for each day
-        View sundayCard = view.findViewById(R.id.time_entry_sunday_card);
-        View mondayCard = view.findViewById(R.id.time_entry_monday_card);
-        View tuesdayCard = view.findViewById(R.id.time_entry_tuesday_card);
-        View wednesdayCard = view.findViewById(R.id.time_entry_wednesday_card);
-        View thursdayCard = view.findViewById(R.id.time_entry_thursday_card);
-        View fridayCard = view.findViewById(R.id.time_entry_friday_card);
-        View saturdayCard = view.findViewById(R.id.time_entry_saturday_card);
+        mSundayCard = view.findViewById(R.id.time_entry_sunday_card);
+        mMondayCard = view.findViewById(R.id.time_entry_monday_card);
+        mTuesdayCard = view.findViewById(R.id.time_entry_tuesday_card);
+        mWednesdayCard = view.findViewById(R.id.time_entry_wednesday_card);
+        mThursdayCard = view.findViewById(R.id.time_entry_thursday_card);
+        mFridayCard = view.findViewById(R.id.time_entry_friday_card);
+        mSaturdayCard = view.findViewById(R.id.time_entry_saturday_card);
 
         // Initialize label for each day
-        mSundayLabel = (TextView) sundayCard.findViewById(R.id.time_entry_day_label);
-        mMondayLabel = (TextView) mondayCard.findViewById(R.id.time_entry_day_label);
-        mTuesdayLabel = (TextView) tuesdayCard.findViewById(R.id.time_entry_day_label);
-        mWednesdayLabel = (TextView) wednesdayCard.findViewById(R.id.time_entry_day_label);
-        mThursdayLabel = (TextView) thursdayCard.findViewById(R.id.time_entry_day_label);
-        mFridayLabel = (TextView) fridayCard.findViewById(R.id.time_entry_day_label);
-        mSaturdayLabel = (TextView) saturdayCard.findViewById(R.id.time_entry_day_label);
+        mSundayLabel = (TextView) mSundayCard.findViewById(R.id.time_entry_day_label);
+        mMondayLabel = (TextView) mMondayCard.findViewById(R.id.time_entry_day_label);
+        mTuesdayLabel = (TextView) mTuesdayCard.findViewById(R.id.time_entry_day_label);
+        mWednesdayLabel = (TextView) mWednesdayCard.findViewById(R.id.time_entry_day_label);
+        mThursdayLabel = (TextView) mThursdayCard.findViewById(R.id.time_entry_day_label);
+        mFridayLabel = (TextView) mFridayCard.findViewById(R.id.time_entry_day_label);
+        mSaturdayLabel = (TextView) mSaturdayCard.findViewById(R.id.time_entry_day_label);
 
         // Initialize recycler views for each day
-        mSundayRecyclerView = (RecyclerView) sundayCard.findViewById(R.id.time_entry_recycler_view);
-        mMondayRecyclerView = (RecyclerView) mondayCard.findViewById(R.id.time_entry_recycler_view);
+        mSundayRecyclerView = (RecyclerView) mSundayCard.findViewById(R.id.time_entry_recycler_view);
+        mMondayRecyclerView = (RecyclerView) mMondayCard.findViewById(R.id.time_entry_recycler_view);
+        mTuesdayRecyclerView = (RecyclerView) mTuesdayCard.findViewById(R.id.time_entry_recycler_view);
+        mWednesdayRecyclerView = (RecyclerView) mWednesdayCard.findViewById(R.id.time_entry_recycler_view);
+        mThursdayRecyclerView = (RecyclerView) mThursdayCard.findViewById(R.id.time_entry_recycler_view);
+        mFridayRecyclerView = (RecyclerView) mFridayCard.findViewById(R.id.time_entry_recycler_view);
+        mSaturdayRecyclerView = (RecyclerView) mSaturdayCard.findViewById(R.id.time_entry_recycler_view);
 
         // Set layout managers
         mSundayRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mMondayRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mTuesdayRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mWednesdayRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mThursdayRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mFridayRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mSaturdayRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         // Set labels
-        mSundayLabel.setText("Sunday");
-        mMondayLabel.setText("Monday");
-        mTuesdayLabel.setText("Tuesday");
-        mWednesdayLabel.setText("Wednesday");
-        mThursdayLabel.setText("Thursday");
-        mFridayLabel.setText("Friday");
-        mSaturdayLabel.setText("Saturday");
-
-
+        updateCardLabels(mWeekNumber);
 
 
         new DownloadTime().execute();
@@ -125,11 +163,68 @@ public class TimeEntryFragment extends Fragment {
     }
 
     public void setupAdapters() {
-        TimeAdapter mSundayAdapter = new TimeAdapter(mTime);
+        mSunday = TimeEntryWeekLoader.initializeDayList(mWeekNumber, 1, mDay);
+        mSundayAdapter = new TimeAdapter(mSunday);
         mSundayRecyclerView.setAdapter(mSundayAdapter);
 
-        TimeAdapter mMondayAdapter = new TimeAdapter(mTime);
+        mMonday = TimeEntryWeekLoader.initializeDayList(mWeekNumber, 2, mDay);
+        mMondayAdapter = new TimeAdapter(mMonday);
         mMondayRecyclerView.setAdapter(mMondayAdapter);
+
+        mTuesday = TimeEntryWeekLoader.initializeDayList(mWeekNumber, 3, mDay);
+        mTuesdayAdapter = new TimeAdapter(mTuesday);
+        mTuesdayRecyclerView.setAdapter(mTuesdayAdapter);
+
+        mWednesday = TimeEntryWeekLoader.initializeDayList(mWeekNumber, 4, mDay);
+        mWednesdayAdapter = new TimeAdapter(mWednesday);
+        mWednesdayRecyclerView.setAdapter(mWednesdayAdapter);
+
+        mThursday = TimeEntryWeekLoader.initializeDayList(mWeekNumber, 5, mDay);
+        mThursdayAdapter = new TimeAdapter(mThursday);
+        mThursdayRecyclerView.setAdapter(mThursdayAdapter);
+
+        mFriday = TimeEntryWeekLoader.initializeDayList(mWeekNumber, 6, mDay);
+        mFridayAdapter = new TimeAdapter(mFriday);
+        mFridayRecyclerView.setAdapter(mFridayAdapter);
+
+        mSaturday = TimeEntryWeekLoader.initializeDayList(mWeekNumber, 0, mDay);
+        mSaturdayAdapter = new TimeAdapter(mSaturday);
+        mSaturdayRecyclerView.setAdapter(mSaturdayAdapter);
+    }
+
+    public void updateCardLabels(int weekNumber) {
+        // Get calendar instance and set current week number from parent viewpager
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.WEEK_OF_YEAR, weekNumber);
+        cal.setFirstDayOfWeek(Calendar.SUNDAY);
+
+        // Get current day of week
+        int dayOfWeek = cal.get(Calendar.DAY_OF_WEEK);
+
+        // Set date format
+        SimpleDateFormat sdf = new SimpleDateFormat("EEEE, MMM d");
+
+        // Normalize day, adding 1 - day of week gives sunday, update label
+        cal.add(Calendar.DAY_OF_WEEK, 1 - dayOfWeek);
+        mSundayLabel.setText(sdf.format(cal.getTime()));
+
+        cal.add(Calendar.DAY_OF_WEEK, 1);
+        mMondayLabel.setText(sdf.format(cal.getTime()));
+
+        cal.add(Calendar.DAY_OF_WEEK, 1);
+        mTuesdayLabel.setText(sdf.format(cal.getTime()));
+
+        cal.add(Calendar.DAY_OF_WEEK, 1);
+        mWednesdayLabel.setText(sdf.format(cal.getTime()));
+
+        cal.add(Calendar.DAY_OF_WEEK, 1);
+        mThursdayLabel.setText(sdf.format(cal.getTime()));
+
+        cal.add(Calendar.DAY_OF_WEEK, 1);
+        mFridayLabel.setText(sdf.format(cal.getTime()));
+
+        cal.add(Calendar.DAY_OF_WEEK, 1);
+        mSaturdayLabel.setText(sdf.format(cal.getTime()));
 
     }
 
@@ -138,24 +233,27 @@ public class TimeEntryFragment extends Fragment {
      */
     private class TimeHolder extends RecyclerView.ViewHolder {
 
+        private TextView mDetail;
+
 
         public TimeHolder(LayoutInflater inflater, ViewGroup parent, View view) {
             super(inflater.inflate(R.layout.list_item_time_entry, parent, false));
 
+            mDetail = (TextView) itemView.findViewById(R.id.time_entry_job_detail);
+
         }
 
         public void bind(TimeEntryDay time) {
-            mSundayLabel.setText("There is stuff happenening");
-            mMondayLabel.setText(time.getCustomer());
+            mDetail.setText(time.getCustomer() + " - " + time.getDescription());
         }
     }
 
     private class TimeAdapter extends RecyclerView.Adapter<TimeHolder> {
 
-        private List<TimeEntryDay> mTime;
+        private List<TimeEntryDay> mDayInfo;
 
-        public TimeAdapter(List<TimeEntryDay> time) {
-            mTime = time;
+        public TimeAdapter(List<TimeEntryDay> day) {
+            mDayInfo = day;
         }
 
         @Override
@@ -168,131 +266,16 @@ public class TimeEntryFragment extends Fragment {
         @Override
         public void onBindViewHolder(TimeHolder holder, int position) {
 
-            TimeEntryDay time = TimeEntryWeekLoader.initializeDayList(18, mTime);
-            holder.bind(time);
+            TimeEntryDay day = mDayInfo.get(position);
+            holder.bind(day);
         }
 
         @Override
         public int getItemCount() {
-            Log.i(TAG, "Size of: " + mTime.size());
-            return mTime.size();
+            return mDayInfo.size();
         }
     }
 
-    /*
-        Week holder and adapter, horizontal scrolling recycler views for showing each day
-     */
-//    private class WeekHolder extends RecyclerView.ViewHolder {
-//        private List<TimeEntryDay> mDay = new ArrayList<>();
-//
-//        private TextView mDayText;
-//        private TextView mDateText;
-//        private Button mAddNew;
-//        private RecyclerView mDayRecyclerView;
-//        private DayAdapter mDayAdapter;
-
-
-//        public WeekHolder(LayoutInflater inflater, ViewGroup parent) {
-//            super(inflater.inflate(R.layout.list_item_time_entry_day, parent, false));
-//
-//            mDayText = (TextView) itemView.findViewById(R.id.time_entry_day_header);
-//            mDateText = (TextView) itemView.findViewById(R.id.time_entry_day_date);
-//
-//            mDayRecyclerView = (RecyclerView) itemView.findViewById(R.id.time_entry_day_recycler_view);
-//            mDayRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-
-//            mDayAdapter = new DayAdapter(mDay);
-
-//            mDayRecyclerView.setAdapter(mDayAdapter);
-//        }
-//
-//        public void bind(TimeEntryWeek week) {
-//
-//
-//            mDayText.setText(week.getDayName());
-//            mDateText.setText(week.getDate());
-//        }
-//    }
-//
-//    private class WeekAdapter extends RecyclerView.Adapter<WeekHolder> {
-//
-//        private List<TimeEntryWeek> mWeek = new ArrayList<>();
-//
-//
-//        public WeekAdapter(List<TimeEntryWeek> week) {
-//            mWeek = week;
-//        }
-//
-//        @Override
-//        public WeekHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-//            LayoutInflater inflater = LayoutInflater.from(getActivity());
-//            return new WeekHolder(inflater, parent);
-//        }
-//
-//        @Override
-//        public void onBindViewHolder(WeekHolder holder, int position) {
-//            Log.i(TAG, "Calling up week holder position: " + position);
-//            TimeEntryWeek week = mWeek.get(position);
-//            mDay = TimeEntryWeekLoader.initializeDayList(mWeek.get(position), mRawDay);
-//
-//            mDayAdapter = new DayAdapter(mDay);
-//            mDayRecyclerView.setAdapter(mDayAdapter);
-//
-//
-//
-//            holder.bind(week);
-//        }
-//
-//        @Override
-//        public int getItemCount() {
-//            return mWeek.size();
-//        }
-//    }
-
-    /*
-    *   Day holder and adapter, for showing detailed time breakdown within the card
-     */
-//    private class DayHolder extends RecyclerView.ViewHolder {
-//
-//        private TextView mText;
-//
-//        public DayHolder(LayoutInflater inflater, ViewGroup parent) {
-//            super(inflater.inflate(R.layout.list_item_time_entry_detail, parent, false));
-//
-//            mText = (TextView) itemView.findViewById(R.id.time_entry_project_description);
-//        }
-//
-//        public void bind(TimeEntryDay day) {
-//            Log.i(TAG, "Setting customer: " + day.getCustomer());
-//            mText.setText(day.getCustomer());
-//        }
-//    }
-//
-//    private class DayAdapter extends RecyclerView.Adapter<DayHolder> {
-//
-//        public DayAdapter(List<TimeEntryDay> day) {
-//            mDay = day;
-//        }
-//
-//        @Override
-//        public DayHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-//            LayoutInflater inflater = LayoutInflater.from(getActivity());
-//            return new DayHolder(inflater, parent);
-//        }
-//
-//        @Override
-//        public void onBindViewHolder(DayHolder holder, int position) {
-//
-//            Log.i(TAG, "Calling up day holder position: " + position);
-//            mDay = TimeEntryWeekLoader.initializeDayList(mWeek.get(position), mDay);
-//            holder.bind(mDay.get(position));
-//        }
-//
-//        @Override
-//        public int getItemCount() {
-//            return mDay.size();
-//        }
-//    }
 
     /*
 Asychrounous task to download project list
@@ -331,7 +314,7 @@ Asychrounous task to download project list
 
         @Override
         protected void onPostExecute(List<TimeEntryDay> s) {
-            mTime = s;
+            mDay.addAll(s);
             setupAdapters();
 
             // Dismiss loading dialog
