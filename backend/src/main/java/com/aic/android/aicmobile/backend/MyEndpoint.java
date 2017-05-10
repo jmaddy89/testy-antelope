@@ -13,7 +13,6 @@ import com.google.api.server.spi.config.ApiNamespace;
 
 
 import java.util.Calendar;
-import java.util.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Connection;
@@ -22,14 +21,12 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.inject.Named;
-
 /**
  * An endpoint class we are exposing
  */
 @Api(
         name = "aicDataAPI",
-        version = "v1",
+        version = "v1.1",
         namespace = @ApiNamespace(
                 ownerDomain = "backend.aicmobile.android.aic.com",
                 ownerName = "backend.aicmobile.android.aic.com",
@@ -340,22 +337,68 @@ public class MyEndpoint {
     }
 
     @ApiMethod(name="getTime")
-    public List<TimeEntryDay> getTime() {
+    public List<TimeEntryDay> getTime(TimeEntryRequestDayInfo request) {
         List<TimeEntryDay> time = new ArrayList<>();
-        TimeEntryDay timeData = new TimeEntryDay();
 
         Calendar cal = Calendar.getInstance();
-        Date date = new Date();
+        cal.set(Calendar.YEAR, request.getYear());
+        cal.set(Calendar.WEEK_OF_YEAR, request.getWeekNumber());
 
-        timeData.setProjectNumber(1937);
-        timeData.setCustomer("Abbott");
-        timeData.setDescription("Building stuff");
-        timeData.setBillable(true);
-        timeData.setDate(cal.getTime());
-        timeData.setTime(5.5f);
-        timeData.setNote("There was a lot of work happening");
+        // Set day of week to sunday
+        cal.set(Calendar.DAY_OF_WEEK, 1);
 
-        time.add(0,timeData);
+        // Get start date
+        String startDate = cal.getTime().toString();
+
+        // Add days to get to saturday as end date
+        cal.add(Calendar.DAY_OF_WEEK, 6);
+        String endDate = cal.getTime().toString();
+
+        // Convert string dates to sql dates
+        java.sql.Date sDate = java.sql.Date.valueOf(startDate);
+        java.sql.Date eDate = java.sql.Date.valueOf(endDate);
+
+        try {
+
+            Class.forName("com.mysql.jdbc.GoogleDriver");
+
+            String timeQuery = "SELECT * FROM aic.time_entry WHERE user_id=? and date BETWEEN ? AND ?";
+
+            try {
+                Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+                PreparedStatement stmt = conn.prepareStatement(timeQuery);
+                stmt.setInt(1, request.getUserId());
+                stmt.setDate(2, sDate);
+                stmt.setDate(3, eDate);
+
+                ResultSet rs = stmt.executeQuery();
+
+                // Check for result, then set project number
+                if (rs.next()) {
+                    TimeEntryDay timeData = new TimeEntryDay();
+
+                    timeData.setProjectNumber(1937);
+//                    timeData.setCustomer(rs.getString("customer"));
+                    timeData.setDescription(rs.getString("description"));
+                    timeData.setBillable(rs.getBoolean("billable"));
+                    timeData.setDate(rs.getDate("date"));
+                    timeData.setTime(rs.getFloat("time"));
+                    timeData.setNote(rs.getString("notes"));
+                }
+
+            } catch(Exception e) {
+                TimeEntryDay queryFail = new TimeEntryDay();
+                queryFail.setCustomer("Failed getting project number: " + e.toString());
+                time.add(queryFail);
+                return time;
+            }
+
+        } catch(Exception e) {
+            TimeEntryDay totalFail = new TimeEntryDay();
+            totalFail.setCustomer("Failed loading driver: " + e.toString());
+            time.add(totalFail);
+        }
+
         return time;
     }
 }

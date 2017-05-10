@@ -3,7 +3,6 @@ package com.aic.android.aicmobile;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.design.widget.BaseTransientBottomBar;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -12,22 +11,19 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.aic.android.aicmobile.backend.aicDataAPI.model.TimeEntryRequestDayInfo;
 import com.aic.android.aicmobile.backend.aicDataAPI.AicDataAPI;
 import com.aic.android.aicmobile.backend.aicDataAPI.model.TimeEntryDay;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.extensions.android.json.AndroidJsonFactory;
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.Locale;
 
 /**
  * Created by JLM on 4/9/2017.
@@ -304,6 +300,11 @@ Asychronous task to download project list
                         .setRootUrl("https://i-melody-158021.appspot.com/_ah/api/");
                 myApiService = builder.build();
             }
+
+            TimeEntryRequestDayInfo requestInfo = new TimeEntryRequestDayInfo();
+            requestInfo.setUserId(1);
+            requestInfo.setWeekNumber(mWeekNumber);
+            requestInfo.setYear(2017);
 
 
             try {
