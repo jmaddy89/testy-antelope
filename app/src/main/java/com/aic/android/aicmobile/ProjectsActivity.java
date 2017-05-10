@@ -20,11 +20,6 @@ public class ProjectsActivity extends SingleFragmentActivity {
         setContentView(R.layout.activity_fragment);
     }
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        overridePendingTransition(R.anim.trans_right_in, R.anim.trans_right_out);
-    }
 
 
 }

@@ -3,6 +3,8 @@ package com.aic.android.aicmobile;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.BaseTransientBottomBar;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -278,7 +280,7 @@ public class TimeEntryFragment extends Fragment {
 
 
     /*
-Asychrounous task to download project list
+Asychronous task to download project list
  */
     private class DownloadTime extends AsyncTask<Void, Void, List<TimeEntryDay>> {
         private AicDataAPI myApiService = null;
@@ -287,8 +289,11 @@ Asychrounous task to download project list
 
         @Override
         protected void onPreExecute() {
-            this.dialog.setMessage("Loading time");
-            this.dialog.show();
+            Snackbar.make(getActivity().findViewById(android.R.id.content), "Loading time", Snackbar.LENGTH_LONG)
+                    .setAction("Action", null)
+                    .show();
+//            this.dialog.setMessage("Loading time");
+//            this.dialog.show();
         }
 
         @Override
@@ -318,9 +323,9 @@ Asychrounous task to download project list
             setupAdapters();
 
             // Dismiss loading dialog
-            if (dialog.isShowing()) {
-                dialog.dismiss();
-            }
+//            if (dialog.isShowing()) {
+//                dialog.dismiss();
+//            }
 
             try {
                 Log.i(TAG, "Response from google endpoint: " + s.toString());
