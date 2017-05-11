@@ -39,6 +39,8 @@ public class RFQAddActivity extends AppCompatActivity {
     private static final int REQUEST_DATE = 0;
     private static final String DIALOG_DATE = "DialogDate";
 
+    private static final String APP_URL = "https://aic-mobile-5fdf1.appspot.com/_ah/api/";
+
     private List<String> mCustomerArray = new ArrayList<>();
     private List<String> mContactArray = new ArrayList<>();
 
@@ -196,7 +198,7 @@ public class RFQAddActivity extends AppCompatActivity {
             if (myApiService == null) {
                 AicDataAPI.Builder builder = new AicDataAPI.Builder(AndroidHttp.newCompatibleTransport(), new AndroidJsonFactory(), null)
                         //Root url of google cloud project
-                        .setRootUrl("https://i-melody-158021.appspot.com/_ah/api/");
+                        .setRootUrl(APP_URL);
                 myApiService = builder.build();
             }
 
@@ -276,7 +278,7 @@ public class RFQAddActivity extends AppCompatActivity {
             if (myApiService == null) {
                 AicDataAPI.Builder builder = new AicDataAPI.Builder(AndroidHttp.newCompatibleTransport(), new AndroidJsonFactory(), null)
                         //Root url of google cloud project
-                        .setRootUrl("https://i-melody-158021.appspot.com/_ah/api/");
+                        .setRootUrl(APP_URL);
                 myApiService = builder.build();
             }
 

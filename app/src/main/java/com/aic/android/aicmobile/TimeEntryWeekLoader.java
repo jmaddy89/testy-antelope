@@ -121,38 +121,34 @@ public class TimeEntryWeekLoader {
         List<TimeEntryDay> returnList = new ArrayList<>();
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.WEEK_OF_YEAR, week);
         cal.set(Calendar.DAY_OF_WEEK, day);
-        String weekDate = sdf.format(cal.getTime());
-        TimeEntryDay dayInfo = new TimeEntryDay();
-        Log.i(TAG, "Daylist size is: " + dayList.size());
-        if (dayList.size() > 0) {
-            dayInfo = dayList.get(0);
-        }
 
-        int index = 0;
+        String weekDate = sdf.format(cal.getTime());
+
+
         for (int i = 0; i < dayList.size(); i++) {
 
            String dayDate = null;
             try {
                 // Convert strange endpoint datetime object to string, and split off date only
-                Log.i(TAG, "Crashing on: " + dayList.get(i).getDate().toString());
                 dayDate = dayList.get(i).getDate().toString().split("T")[0];
             } catch (Exception e) {
                 Log.e(TAG, "Null date: ", e);
             }
 
             if (weekDate.equals(dayDate)) {
-                dayInfo.setCustomer(dayList.get(i).getCustomer());
-                Log.i(TAG, "This date equals: " + weekDate);
+                // Set dayInfo equal to entry found from database if dates match
+                TimeEntryDay dayInfo = dayList.get(i);
 
-                returnList.add(index, dayInfo);
-                index++;
+                returnList.add(dayInfo);
             } else {
                 Log.i(TAG, "No match found " + weekDate + " and " + dayDate);
             }
         }
+        Log.i(TAG, "Return list: " + returnList);
         return returnList;
     }
 }

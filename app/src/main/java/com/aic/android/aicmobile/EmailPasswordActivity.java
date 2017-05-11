@@ -46,6 +46,8 @@ public class EmailPasswordActivity extends MainActivity implements
 
     private static final String TAG = "EmailPassword";
 
+    private static final String APP_URL = "https://aic-mobile-5fdf1.appspot.com/_ah/api/";
+
     private TextView mStatusTextView;
     private TextView mDetailTextView;
     private EditText mEmailField;

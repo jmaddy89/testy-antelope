@@ -41,6 +41,8 @@ public class ProjectsListFragment extends Fragment {
     private static final String PROJ_CUSTOMER = "AIC";
     private static final String PROJ_DESCRIPTION = "Mobile";
 
+    private static final String APP_URL = "https://aic-mobile-5fdf1.appspot.com/_ah/api/";
+
     private RecyclerView mProjectRecyclerView;
     private ProjectAdapter mAdapter;
     private Callbacks mCallbacks;
@@ -286,7 +288,7 @@ public class ProjectsListFragment extends Fragment {
             if (myApiService == null) {
                 AicDataAPI.Builder builder = new AicDataAPI.Builder(AndroidHttp.newCompatibleTransport(), new AndroidJsonFactory(), null)
                         //Root url of google cloud project
-                        .setRootUrl("https://i-melody-158021.appspot.com/_ah/api/");
+                        .setRootUrl(APP_URL);
                 myApiService = builder.build();
             }
 

@@ -12,6 +12,8 @@ import com.google.api.server.spi.config.ApiMethod;
 import com.google.api.server.spi.config.ApiNamespace;
 
 
+import java.util.Date;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -21,12 +23,14 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Named;
+
 /**
  * An endpoint class we are exposing
  */
 @Api(
         name = "aicDataAPI",
-        version = "v1.1",
+        version = "v1",
         namespace = @ApiNamespace(
                 ownerDomain = "backend.aicmobile.android.aic.com",
                 ownerName = "backend.aicmobile.android.aic.com",
@@ -35,9 +39,10 @@ import java.util.List;
 )
 public class MyEndpoint {
 
-    private static final String URL = "jdbc:google:mysql://i-melody-158021:us-east1:aic/aic";
+    private static final String URL = "jdbc:google:mysql://aic-mobile-5fdf1:us-east1:aic/aic";
     private static final String USER = "root";
     private static final String PASSWORD = "AIC7015203";
+    private static final String DRIVER = "com.mysql.jdbc.GoogleDriver";
 
     @ApiMethod(name = "projectQuery")
     public List<Projects> projectQuery() {
@@ -46,7 +51,7 @@ public class MyEndpoint {
 
         try {
 
-            Class.forName("com.mysql.jdbc.GoogleDriver");
+            Class.forName(DRIVER);
 
             String finalQuery = "SELECT proj_number, customer, description, budget, burn, project_status, aic_contact, customer_contact FROM aic.google_project_list WHERE (project_status=1 OR project_status=2) AND proj_number>100";
 
@@ -90,7 +95,7 @@ public class MyEndpoint {
 
         try {
 
-            Class.forName("com.mysql.jdbc.GoogleDriver");
+            Class.forName(DRIVER);
 
             String finalQuery = "SELECT COUNT(*) FROM aic.projects WHERE (project_status=1 OR project_status=2) AND co_number=0 AND option_number=0 AND proj_number>100";
 
@@ -124,7 +129,7 @@ public class MyEndpoint {
         List<Customers> customers = new ArrayList<>();
         try {
 
-            Class.forName("com.mysql.jdbc.GoogleDriver");
+            Class.forName(DRIVER);
 
             String finalQuery = "SELECT ndx, customer FROM aic.customers ORDER BY customer ASC";
 
@@ -162,7 +167,7 @@ public class MyEndpoint {
         List<CustomerContacts> contacts = new ArrayList<>();
         try {
 
-            Class.forName("com.mysql.jdbc.GoogleDriver");
+            Class.forName(DRIVER);
 
             String finalQuery = "SELECT DISTINCT customer_contact FROM aic.projects WHERE customer_contact IS NOT NULL AND customer_contact != '' ORDER BY customer_contact ASC";
 
@@ -201,7 +206,7 @@ public class MyEndpoint {
 
         try {
 
-            Class.forName("com.mysql.jdbc.GoogleDriver");
+            Class.forName(DRIVER);
 
             String projNumberQuery = "SELECT MAX(proj_number) + 1 FROM aic.projects";
 
@@ -257,7 +262,7 @@ public class MyEndpoint {
         return result;
     }
 
-    @ApiMethod(name="createERPEntry")
+    @ApiMethod(name = "createERPEntry")
     public MyBean createERPEntry(NewFirebaseLogin loginInfo) {
         String name = null;
         int erpUserId = 0;
@@ -266,7 +271,7 @@ public class MyEndpoint {
 
         try {
 
-            Class.forName("com.mysql.jdbc.GoogleDriver");
+            Class.forName(DRIVER);
 
             String userIdQuery = "SELECT user_id FROM aic.aic_emp_user_ci WHERE contact_type='email' AND contact_value=?";
 
@@ -336,9 +341,11 @@ public class MyEndpoint {
         return result;
     }
 
-    @ApiMethod(name="getTime")
-    public List<TimeEntryDay> getTime(TimeEntryRequestDayInfo request) {
+    @ApiMethod(name = "downloadTime")
+    public List<TimeEntryDay> downloadTime(TimeEntryRequestDayInfo request) {
         List<TimeEntryDay> time = new ArrayList<>();
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.YEAR, request.getYear());
@@ -348,42 +355,44 @@ public class MyEndpoint {
         cal.set(Calendar.DAY_OF_WEEK, 1);
 
         // Get start date
-        String startDate = cal.getTime().toString();
+        String startDate = sdf.format(cal.getTime());
 
         // Add days to get to saturday as end date
         cal.add(Calendar.DAY_OF_WEEK, 6);
-        String endDate = cal.getTime().toString();
+        String endDate = sdf.format(cal.getTime());
 
         // Convert string dates to sql dates
-        java.sql.Date sDate = java.sql.Date.valueOf(startDate);
-        java.sql.Date eDate = java.sql.Date.valueOf(endDate);
+//        java.sql.Date sDate = java.sql.Date.valueOf(startDate);
+//        java.sql.Date eDate = java.sql.Date.valueOf(endDate);
 
         try {
 
-            Class.forName("com.mysql.jdbc.GoogleDriver");
+            Class.forName(DRIVER);
 
-            String timeQuery = "SELECT * FROM aic.time_entry WHERE user_id=? and date BETWEEN ? AND ?";
+            String timeQuery = "SELECT * FROM aic.google_time_entry WHERE user_id=? and date BETWEEN ? AND ?";
 
             try {
                 Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
                 PreparedStatement stmt = conn.prepareStatement(timeQuery);
                 stmt.setInt(1, request.getUserId());
-                stmt.setDate(2, sDate);
-                stmt.setDate(3, eDate);
+                stmt.setString(2, startDate);
+                stmt.setString(3, endDate);
 
                 ResultSet rs = stmt.executeQuery();
 
-                // Check for result, then set project number
-                if (rs.next()) {
+                // Loop through results and build list
+                while (rs.next()) {
                     TimeEntryDay timeData = new TimeEntryDay();
 
-                    timeData.setProjectNumber(1937);
-//                    timeData.setCustomer(rs.getString("customer"));
+                    timeData.setProjectNumber(rs.getInt("proj_number"));
+                    timeData.setCustomer(rs.getString("customer"));
                     timeData.setDescription(rs.getString("description"));
                     timeData.setBillable(rs.getBoolean("billable"));
                     timeData.setDate(rs.getDate("date"));
                     timeData.setTime(rs.getFloat("time"));
                     timeData.setNote(rs.getString("notes"));
+
+                    time.add(timeData);
                 }
 
             } catch(Exception e) {

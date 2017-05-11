@@ -1,75 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <include
-        layout="@layout/content_time_entry_card"
-        tools:layout_editor_absoluteY="0dp"
-        tools:layout_editor_absoluteX="0dp"
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-        android:layout_margin="4dp"
-        android:id="@+id/time_entry_sunday_card"/>
+    <LinearLayout
 
-    <include
-        layout="@layout/content_time_entry_card"
-        tools:layout_editor_absoluteY="0dp"
-        tools:layout_editor_absoluteX="0dp"
-        android:layout_height="wrap_content"
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_margin="4dp"
-        android:id="@+id/time_entry_monday_card"/>
+        android:layout_height="match_parent">
 
-    <include
-        layout="@layout/content_time_entry_card"
-        tools:layout_editor_absoluteY="0dp"
-        tools:layout_editor_absoluteX="0dp"
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-        android:layout_margin="4dp"
-        android:id="@+id/time_entry_tuesday_card"/>
+        <include
+            layout="@layout/content_time_entry_card"
+            tools:layout_editor_absoluteY="0dp"
+            tools:layout_editor_absoluteX="0dp"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_margin="4dp"
+            android:id="@+id/time_entry_sunday_card"/>
 
-    <include
-        layout="@layout/content_time_entry_card"
-        tools:layout_editor_absoluteY="0dp"
-        tools:layout_editor_absoluteX="0dp"
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-        android:layout_margin="4dp"
-        android:id="@+id/time_entry_wednesday_card"/>
+        <include
+            layout="@layout/content_time_entry_card"
+            tools:layout_editor_absoluteY="0dp"
+            tools:layout_editor_absoluteX="0dp"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_margin="4dp"
+            android:id="@+id/time_entry_monday_card"/>
 
-    <include
-        layout="@layout/content_time_entry_card"
-        tools:layout_editor_absoluteY="0dp"
-        tools:layout_editor_absoluteX="0dp"
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-        android:layout_margin="4dp"
-        android:id="@+id/time_entry_thursday_card"/>
+        <include
+            layout="@layout/content_time_entry_card"
+            tools:layout_editor_absoluteY="0dp"
+            tools:layout_editor_absoluteX="0dp"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_margin="4dp"
+            android:id="@+id/time_entry_tuesday_card"/>
 
-    <include
-        layout="@layout/content_time_entry_card"
-        tools:layout_editor_absoluteY="0dp"
-        tools:layout_editor_absoluteX="0dp"
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-        android:layout_margin="4dp"
-        android:id="@+id/time_entry_friday_card"/>
+        <include
+            layout="@layout/content_time_entry_card"
+            tools:layout_editor_absoluteY="0dp"
+            tools:layout_editor_absoluteX="0dp"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_margin="4dp"
+            android:id="@+id/time_entry_wednesday_card"/>
 
-    <include
-        layout="@layout/content_time_entry_card"
-        tools:layout_editor_absoluteY="0dp"
-        tools:layout_editor_absoluteX="0dp"
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-        android:layout_margin="4dp"
-        android:id="@+id/time_entry_saturday_card"/>
+        <include
+            layout="@layout/content_time_entry_card"
+            tools:layout_editor_absoluteY="0dp"
+            tools:layout_editor_absoluteX="0dp"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_margin="4dp"
+            android:id="@+id/time_entry_thursday_card"/>
 
-</LinearLayout>
+        <include
+            layout="@layout/content_time_entry_card"
+            tools:layout_editor_absoluteY="0dp"
+            tools:layout_editor_absoluteX="0dp"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_margin="4dp"
+            android:id="@+id/time_entry_friday_card"/>
+
+        <include
+            layout="@layout/content_time_entry_card"
+            tools:layout_editor_absoluteY="0dp"
+            tools:layout_editor_absoluteX="0dp"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_margin="4dp"
+            android:id="@+id/time_entry_saturday_card"/>
+
+    </LinearLayout>
+</ScrollView>
 <!--<LinearLayout-->
     <!--xmlns:android="http://schemas.android.com/apk/res/android"-->
     <!--android:layout_width="match_parent"-->

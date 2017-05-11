@@ -24,6 +24,8 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final String APP_URL = "https://aic-mobile-5fdf1.appspot.com/_ah/api/";
+
     @VisibleForTesting
     public ProgressDialog mProgressDialog;
 
@@ -140,7 +142,7 @@ public class MainActivity extends AppCompatActivity {
             if (myApiService == null) {
                 AicDataAPI.Builder builder = new AicDataAPI.Builder(AndroidHttp.newCompatibleTransport(), new AndroidJsonFactory(), null)
                         //Root url of google cloud project
-                        .setRootUrl("https://i-melody-158021.appspot.com/_ah/api/");
+                        .setRootUrl(APP_URL);
                 myApiService = builder.build();
             }
 

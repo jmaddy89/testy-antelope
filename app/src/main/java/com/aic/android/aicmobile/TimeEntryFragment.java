@@ -39,6 +39,8 @@ public class TimeEntryFragment extends Fragment {
     private static final String TAG = "TimeEntryFragment";
     private static final String ARG_WEEK_NUBMER = "week_number";
 
+    private static final String APP_URL = "https://aic-mobile-5fdf1.appspot.com/_ah/api/";
+
     private int mWeekNumber;
 
     // Day labels
@@ -297,7 +299,7 @@ Asychronous task to download project list
             if (myApiService == null) {
                 AicDataAPI.Builder builder = new AicDataAPI.Builder(AndroidHttp.newCompatibleTransport(), new AndroidJsonFactory(), null)
                         //Root url of google cloud project
-                        .setRootUrl("https://i-melody-158021.appspot.com/_ah/api/");
+                        .setRootUrl(APP_URL);
                 myApiService = builder.build();
             }
 
@@ -308,8 +310,7 @@ Asychronous task to download project list
 
 
             try {
-                Log.i(TAG, "made it to the async task bit");
-                List<TimeEntryDay> raw = myApiService.getTime().execute().getItems();
+                List<TimeEntryDay> raw = myApiService.downloadTime(requestInfo).execute().getItems();
                 return parseItems(raw);
             } catch (IOException e) {
                 Log.i(TAG, "IO Exception", e);
@@ -342,6 +343,13 @@ Asychronous task to download project list
     private List<TimeEntryDay> parseItems(List<TimeEntryDay> raw) {
 
         List<TimeEntryDay> times = new ArrayList<>();
+
+        // If list is null, then return an empty list instead of a null one
+        if (raw == null) {
+            TimeEntryDay emptyDay = new TimeEntryDay();
+            times.add(emptyDay);
+            return times;
+        }
 
         for (int i = 0; i < raw.size(); i++) {
 
