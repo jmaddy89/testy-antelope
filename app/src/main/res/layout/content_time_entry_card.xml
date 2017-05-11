@@ -14,15 +14,29 @@
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:textAllCaps="true"
+            android:textStyle="bold"
+            android:padding="4dp"
+            android:text="@string/time_entry_day_label"/>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/time_entry_recycler_view"
             android:layout_below="@+id/time_entry_day_label"
+            android:layout_marginStart="4dp"
+            android:layout_marginBottom="4dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
         </android.support.v7.widget.RecyclerView>
+
+        <TextView
+            android:id="@+id/time_entry_hours_total"
+            android:layout_alignBottom="@id/time_entry_recycler_view"
+            android:layout_alignParentEnd="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/time_entry_hours_total"/>
 
     </RelativeLayout>
 

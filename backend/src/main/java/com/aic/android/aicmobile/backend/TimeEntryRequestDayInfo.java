@@ -8,7 +8,7 @@ package com.aic.android.aicmobile.backend;
 public class TimeEntryRequestDayInfo {
     private int weekNumber;
     private int year;
-    private int userId;
+    private String userId;
 
     public int getWeekNumber() {
         return weekNumber;
@@ -18,7 +18,7 @@ public class TimeEntryRequestDayInfo {
         return year;
     }
 
-    public int getUserId() {
+    public String getUserId() {
         return userId;
     }
 
@@ -30,7 +30,7 @@ public class TimeEntryRequestDayInfo {
         this.year = year;
     }
 
-    public void setUserId(int userId) {
+    public void setUserId(String userId) {
         this.userId = userId;
     }
 }

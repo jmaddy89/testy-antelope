@@ -361,20 +361,16 @@ public class MyEndpoint {
         cal.add(Calendar.DAY_OF_WEEK, 6);
         String endDate = sdf.format(cal.getTime());
 
-        // Convert string dates to sql dates
-//        java.sql.Date sDate = java.sql.Date.valueOf(startDate);
-//        java.sql.Date eDate = java.sql.Date.valueOf(endDate);
-
         try {
 
             Class.forName(DRIVER);
 
-            String timeQuery = "SELECT * FROM aic.google_time_entry WHERE user_id=? and date BETWEEN ? AND ?";
+            String timeQuery = "SELECT * FROM aic.google_time_entry WHERE firebase_id=? and date BETWEEN ? AND ?";
 
             try {
                 Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
                 PreparedStatement stmt = conn.prepareStatement(timeQuery);
-                stmt.setInt(1, request.getUserId());
+                stmt.setString(1, request.getUserId());
                 stmt.setString(2, startDate);
                 stmt.setString(3, endDate);
 

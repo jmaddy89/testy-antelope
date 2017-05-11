@@ -12,6 +12,8 @@
 
     <!--Content Time Entry Card-->
     <string name="time_entry_content_title">Time Entry</string>
+    <string name="time_entry_day_label">Monday</string>
+    <string name="time_entry_hours_total">Total: 8</string>
 
     <!--Add New RFQ Activity-->
     <string name="rfq_add_customer_label">Select Customer</string>
@@ -32,17 +34,18 @@
     <!--Project List Fragment-->
     <string name="project_list_search">Search</string>
 
-    <!--Time Entry Week List Item-->
-    <string name="time_entry_week_date">April 9 - 16</string>
+    <!--Time Entry List Item-->
+    <string name="time_entry_job_detail">1987 - Abbott - Test</string>
+    <string name="time_entry_job_hours">4</string>
 
     <!--Time Entry Day Card-->
-    <string name="time_entry_day_header">Monday</string>
-    <string name="time_entry_day_date">April 1</string>
-    <string name="time_entry_day_add_new_button">+</string>
+    <!--<string name="time_entry_day_header">Monday</string>-->
+    <!--<string name="time_entry_day_date">April 1</string>-->
+    <!--<string name="time_entry_day_add_new_button">+</string>-->
 
     <!--Time Entry Day Card Recycler View List-->
-    <string name="time_entry_project_description">1987-Abbott-Test</string>
-    <string name="time_entry_project_description_hours">3</string>
+    <!--<string name="time_entry_project_description">1987-Abbott-Test</string>-->
+    <!--<string name="time_entry_project_description_hours">3</string>-->
 
     <!--Login Activity-->
     <string name="label_google_sign_in">Firebase + Google Sign In</string>
@@ -79,6 +82,8 @@
     <string name="project_budget">$%1$s</string>
     <string name="project_burn">$%1$s</string>
     <string name="project_burn_percent">%1$f%</string>
+
+    <!--Project Detail Activity-->
     <string name="title_activity_project_detail">ProjectDetailActivity</string>
     <string name="large_text">
         "Material is the metaphor.\n\n"

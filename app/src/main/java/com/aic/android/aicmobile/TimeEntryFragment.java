@@ -18,6 +18,9 @@ import com.aic.android.aicmobile.backend.aicDataAPI.AicDataAPI;
 import com.aic.android.aicmobile.backend.aicDataAPI.model.TimeEntryDay;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.extensions.android.json.AndroidJsonFactory;
+import com.google.appengine.api.datastore.Text;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -51,6 +54,15 @@ public class TimeEntryFragment extends Fragment {
     private TextView mThursdayLabel;
     private TextView mFridayLabel;
     private TextView mSaturdayLabel;
+
+    // Day total labels
+    private TextView mSundayTotal;
+    private TextView mMondayTotal;
+    private TextView mTuesdayTotal;
+    private TextView mWednesdayTotal;
+    private TextView mThursdayTotal;
+    private TextView mFridayTotal;
+    private TextView mSaturdayTotal;
 
     // Day recyclerviews
     private RecyclerView mSundayRecyclerView;
@@ -234,17 +246,20 @@ public class TimeEntryFragment extends Fragment {
     private class TimeHolder extends RecyclerView.ViewHolder {
 
         private TextView mDetail;
+        private TextView mHours;
 
 
         public TimeHolder(LayoutInflater inflater, ViewGroup parent, View view) {
             super(inflater.inflate(R.layout.list_item_time_entry, parent, false));
 
             mDetail = (TextView) itemView.findViewById(R.id.time_entry_job_detail);
+            mHours = (TextView) itemView.findViewById(R.id.time_entry_job_hours);
 
         }
 
         public void bind(TimeEntryDay time) {
-            mDetail.setText(time.getCustomer() + " - " + time.getDescription());
+            mDetail.setText(time.getProjectNumber() + " - " + time.getCustomer() + " - " + time.getDescription());
+            mHours.setText(time.getTime().toString() + " hours");
         }
     }
 
@@ -303,8 +318,12 @@ Asychronous task to download project list
                 myApiService = builder.build();
             }
 
+            // Get logged in users firebase id
+            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+            // Setup request info to download time
             TimeEntryRequestDayInfo requestInfo = new TimeEntryRequestDayInfo();
-            requestInfo.setUserId(1);
+            requestInfo.setUserId(user.getUid());
             requestInfo.setWeekNumber(mWeekNumber);
             requestInfo.setYear(2017);
 
@@ -360,6 +379,7 @@ Asychronous task to download project list
             time.setBillable(raw.get(i).getBillable());
             time.setDate(raw.get(i).getDate());
             time.setNote(raw.get(i).getNote());
+            time.setTime(raw.get(i).getTime());
 
             times.add(time);
         }

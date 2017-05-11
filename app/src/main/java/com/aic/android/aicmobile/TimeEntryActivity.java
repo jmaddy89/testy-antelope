@@ -58,11 +58,7 @@ public class TimeEntryActivity extends AppCompatActivity /* SingleFragmentActivi
 
             @Override
             public void onPageSelected(int position) {
-                SimpleDateFormat sdf = new SimpleDateFormat("MMMM dd, yyyy");
-                Calendar cal = Calendar.getInstance();
-                cal.set(Calendar.WEEK_OF_YEAR, mTime.get(position).getWeekNumber());
-
-                mWeekLabel.setText(sdf.format(cal.getTime()));
+                updateLabel(position);
             }
 
             @Override
@@ -71,14 +67,34 @@ public class TimeEntryActivity extends AppCompatActivity /* SingleFragmentActivi
             }
         });
 
-
-
+        updateLabel(mViewPager.getCurrentItem());
     }
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
         overridePendingTransition(R.anim.trans_right_in, R.anim.trans_right_out);
+    }
+
+    // Update label at top of page
+    public void updateLabel(int position) {
+        SimpleDateFormat sdf = new SimpleDateFormat("MMMM dd, yyyy");
+        Calendar cal = Calendar.getInstance();
+
+        // Set week from position
+        cal.set(Calendar.WEEK_OF_YEAR, mTime.get(position).getWeekNumber());
+
+        // Get day of week and find sunday
+        int dayOfWeek = cal.get(Calendar.DAY_OF_WEEK);
+        cal.add(Calendar.DAY_OF_WEEK, 1 - dayOfWeek);
+
+        String startDate = sdf.format(cal.getTime());
+
+        cal.add(Calendar.DAY_OF_WEEK, 6);
+        String endDate = sdf.format(cal.getTime());
+
+        // Update label
+        mWeekLabel.setText(startDate + " - " + endDate);
     }
 
 }
