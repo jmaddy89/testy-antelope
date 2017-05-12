@@ -22,16 +22,27 @@ public class TimeEntryWeekLoader {
     public static List<TimeEntryTime> initializeTimeList() {
         List<TimeEntryTime> weeks = new ArrayList<>();
         Calendar cal = Calendar.getInstance();
-        Date date = new Date();
-        cal.setTime(date);
 
         int currentWeek = cal.get(Calendar.WEEK_OF_YEAR);
         int currentYear = cal.get(Calendar.YEAR);
 
-        // Start at i - 4 to go back 4 weeks, then go to load future 2 weeks
-        for (int i = currentWeek - 6; i < currentWeek + 2; i++ ) {
+        // Used if week span goes over a year change
+        int yearChange = 0;
+
+        // Start at i - 6 to go back 6 weeks, then go to load future 6 weeks
+        for (int i = currentWeek - 6; i < currentWeek + 6; i++ ) {
             TimeEntryTime week = new TimeEntryTime();
             week.setWeekNumber(i);
+
+            if (i < 0 && yearChange == 0) {
+                currentYear--;
+                yearChange = 1;
+            }
+            if (i > 52 && yearChange == 0) {
+                currentYear++;
+                yearChange = 1;
+            }
+
             week.setWeekYear(currentYear);
 
             // Offset to start at 0 index
@@ -41,114 +52,53 @@ public class TimeEntryWeekLoader {
         return weeks;
     }
 
-    public static List<TimeEntryWeek> initializeWeekList(int weekNum, int year) {
-        List<TimeEntryWeek> week = new ArrayList<>();
+    public static List<TimeEntryTime> updateTimeList(List<TimeEntryTime> timeList, int weekNumber, int year) {
 
-        // Get calendar reference and set to week and year
-        Calendar cal = Calendar.getInstance();
-        cal.set(Calendar.YEAR, year);
-        cal.set(Calendar.WEEK_OF_YEAR, weekNum);
-
-        SimpleDateFormat sdf = new SimpleDateFormat("MMMM dd");
-
-        for (int i = 0; i < 7; i++) {
-            TimeEntryWeek day = new TimeEntryWeek();
-
-            // switch sets day of week, and updates calendar obj with day of week to get date of that day
-            switch (i) {
-                case 1:
-                    day.setDayName("Sunday");
-                    cal.set(Calendar.DAY_OF_WEEK, i);
-                    day.setDate(sdf.format(cal.getTime()));
-                    day.setRealDate(cal.getTime());
-                    break;
-                case 2:
-                    day.setDayName("Monday");
-                    cal.set(Calendar.DAY_OF_WEEK, i);
-                    day.setDate(sdf.format(cal.getTime()));
-                    day.setRealDate(cal.getTime());
-                    break;
-                case 3:
-                    day.setDayName("Tuesday");
-                    cal.set(Calendar.DAY_OF_WEEK, i);
-                    day.setDate(sdf.format(cal.getTime()));
-                    day.setRealDate(cal.getTime());
-                    break;
-                case 4:
-                    day.setDayName("Wednesday");
-                    cal.set(Calendar.DAY_OF_WEEK, i);
-                    day.setDate(sdf.format(cal.getTime()));
-                    day.setRealDate(cal.getTime());
-                    break;
-                case 5:
-                    day.setDayName("Thursday");
-                    cal.set(Calendar.DAY_OF_WEEK, i);
-                    day.setDate(sdf.format(cal.getTime()));
-                    day.setRealDate(cal.getTime());
-                    break;
-                case 6:
-                    day.setDayName("Friday");
-                    cal.set(Calendar.DAY_OF_WEEK, i);
-                    day.setDate(sdf.format(cal.getTime()));
-                    day.setRealDate(cal.getTime());
-                    break;
-                case 0:
-                    day.setDayName("Saturday");
-                    cal.set(Calendar.DAY_OF_WEEK, i);
-                    day.setDate(sdf.format(cal.getTime()));
-                    day.setRealDate(cal.getTime());
-                    break;
-                default:
-                    day.setDayName("Error");
-                    cal.set(Calendar.DAY_OF_WEEK, i);
-                    day.setDate(sdf.format(cal.getTime()));
-                    day.setRealDate(cal.getTime());
-            }
-
-            // This is done weird because saturday is the first day of the week
-            // and this puts saturday last in the list
-            if (i==0) {
-                week.add(i, day);
-            } else {
-                week.add(i-1, day);
-            }
-        }
-
-        return week;
+        return timeList;
     }
 
+    /*
+        initializeDayList called by recyclerview Adapters on TimeEntryFragment to load data for each day.
+        The week and day is passed in from the fragment, and the list of data from the database is loaded in.
+        Only returns information from the list if it matches the correct day and week
+     */
     public static List<TimeEntryDay> initializeDayList(int week, int day, List<TimeEntryDay> dayList) {
+
+        // Initialize return list
         List<TimeEntryDay> returnList = new ArrayList<>();
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
+        // Get calendar instance and set to week and day of the time request
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.WEEK_OF_YEAR, week);
         cal.set(Calendar.DAY_OF_WEEK, day);
 
+        // Format date to get a date easier to work with
         String weekDate = sdf.format(cal.getTime());
 
-
+        // Loop through results to find matches of data to return
         for (int i = 0; i < dayList.size(); i++) {
 
            String dayDate = null;
-            try {
+            // Try to extract date from daylist. If null, then nothing happens and app doesn't crash
+            if (dayList.get(i).getDate() != null) {
                 // Convert strange endpoint datetime object to string, and split off date only
                 dayDate = dayList.get(i).getDate().toString().split("T")[0];
-            } catch (Exception e) {
-                Log.e(TAG, "Null date: ", e);
+
+                // Check to see if there is a match for the day
+                if (weekDate.equals(dayDate)) {
+
+                    // Set dayInfo equal to entry found from database if dates match
+                    TimeEntryDay dayInfo = dayList.get(i);
+
+                    // Add dayinfo to return list
+                    returnList.add(dayInfo);
+                }
             }
 
-            if (weekDate.equals(dayDate)) {
-                // Set dayInfo equal to entry found from database if dates match
-                TimeEntryDay dayInfo = dayList.get(i);
 
-                returnList.add(dayInfo);
-            } else {
-                Log.i(TAG, "No match found " + weekDate + " and " + dayDate);
-            }
         }
-        Log.i(TAG, "Return list: " + returnList);
         return returnList;
     }
 }

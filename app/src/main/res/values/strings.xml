@@ -13,7 +13,8 @@
     <!--Content Time Entry Card-->
     <string name="time_entry_content_title">Time Entry</string>
     <string name="time_entry_day_label">Monday</string>
-    <string name="time_entry_hours_total">Total: 8</string>
+    <string name="time_entry_hours_total">Week Total: %1$f</string>
+    <string name="time_entry_add_new_button">Add New</string>
 
     <!--Add New RFQ Activity-->
     <string name="rfq_add_customer_label">Select Customer</string>
@@ -38,14 +39,14 @@
     <string name="time_entry_job_detail">1987 - Abbott - Test</string>
     <string name="time_entry_job_hours">4</string>
 
-    <!--Time Entry Day Card-->
-    <!--<string name="time_entry_day_header">Monday</string>-->
-    <!--<string name="time_entry_day_date">April 1</string>-->
-    <!--<string name="time_entry_day_add_new_button">+</string>-->
+    <!--Time Entry Fragment-->
+    <string name="time_entry_week_total_label">Week Total</string>
+    <string name="time_entry_week_total">%1$f</string>
+    <string name="time_entry_submit_button">Submit Time</string>
 
-    <!--Time Entry Day Card Recycler View List-->
-    <!--<string name="time_entry_project_description">1987-Abbott-Test</string>-->
-    <!--<string name="time_entry_project_description_hours">3</string>-->
+    <!--Time Entry Dialog-->
+    <string name="time_entry_dialog_submit">Submit</string>
+    <string name="time_entry_dialog_project_label">Select Project:</string>
 
     <!--Login Activity-->
     <string name="label_google_sign_in">Firebase + Google Sign In</string>

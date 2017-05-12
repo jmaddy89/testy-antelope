@@ -11,4 +11,9 @@
     <!--Sign in activity-->
     <color name="grey_100">#F5F5F5</color>
     <color name="grey_300">#E0E0E0</color>
+
+    <!--Time List Submitted/Unsubmitted Colors-->
+    <color name="submitted">#000000</color>
+    <color name="unsubmitted">#909090</color>
 </resources>
+

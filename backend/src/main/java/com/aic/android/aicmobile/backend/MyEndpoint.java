@@ -365,7 +365,7 @@ public class MyEndpoint {
 
             Class.forName(DRIVER);
 
-            String timeQuery = "SELECT * FROM aic.google_time_entry WHERE firebase_id=? and date BETWEEN ? AND ?";
+            String timeQuery = "SELECT * FROM aic.google_time_entry WHERE firebase_id=? and date BETWEEN ? AND ? ORDER BY proj_number";
 
             try {
                 Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
@@ -384,6 +384,7 @@ public class MyEndpoint {
                     timeData.setCustomer(rs.getString("customer"));
                     timeData.setDescription(rs.getString("description"));
                     timeData.setBillable(rs.getBoolean("billable"));
+                    timeData.setSubmitted(rs.getBoolean("submitted"));
                     timeData.setDate(rs.getDate("date"));
                     timeData.setTime(rs.getFloat("time"));
                     timeData.setNote(rs.getString("notes"));

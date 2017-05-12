@@ -20,6 +20,7 @@ public class TimeEntryActivity extends AppCompatActivity /* SingleFragmentActivi
 
     private ViewPager mViewPager;
     private TextView mWeekLabel;
+    private TextView mWeekTotal;
     private List<TimeEntryTime> mTime;
 
 
@@ -33,6 +34,7 @@ public class TimeEntryActivity extends AppCompatActivity /* SingleFragmentActivi
 
         mViewPager = (ViewPager) findViewById(R.id.time_entry_view_pager);
         mWeekLabel = (TextView) findViewById(R.id.time_entry_week_label);
+
 
         mViewPager.setPadding(16,16,16,16);
 
@@ -58,7 +60,7 @@ public class TimeEntryActivity extends AppCompatActivity /* SingleFragmentActivi
 
             @Override
             public void onPageSelected(int position) {
-                updateLabel(position);
+                updateHeaderLabel(position);
             }
 
             @Override
@@ -67,7 +69,10 @@ public class TimeEntryActivity extends AppCompatActivity /* SingleFragmentActivi
             }
         });
 
-        updateLabel(mViewPager.getCurrentItem());
+        mViewPager.setCurrentItem(6);
+        mViewPager.setOffscreenPageLimit(1);
+
+        updateHeaderLabel(mViewPager.getCurrentItem());
     }
 
     @Override
@@ -77,7 +82,7 @@ public class TimeEntryActivity extends AppCompatActivity /* SingleFragmentActivi
     }
 
     // Update label at top of page
-    public void updateLabel(int position) {
+    public void updateHeaderLabel(int position) {
         SimpleDateFormat sdf = new SimpleDateFormat("MMMM dd, yyyy");
         Calendar cal = Calendar.getInstance();
 

@@ -1,92 +1,134 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout
-
-        android:orientation="vertical"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_above="@+id/time_entry_week_total_card_view">
 
-        <include
-            layout="@layout/content_time_entry_card"
-            tools:layout_editor_absoluteY="0dp"
-            tools:layout_editor_absoluteX="0dp"
-            android:layout_height="wrap_content"
+        <LinearLayout
+
+            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_margin="4dp"
-            android:id="@+id/time_entry_sunday_card"/>
+            android:layout_height="wrap_content">
 
-        <include
-            layout="@layout/content_time_entry_card"
-            tools:layout_editor_absoluteY="0dp"
-            tools:layout_editor_absoluteX="0dp"
-            android:layout_height="wrap_content"
+            <include
+                layout="@layout/content_time_entry_card"
+                tools:layout_editor_absoluteY="0dp"
+                tools:layout_editor_absoluteX="0dp"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_margin="4dp"
+                android:id="@+id/time_entry_sunday_card"/>
+
+            <include
+                layout="@layout/content_time_entry_card"
+                tools:layout_editor_absoluteY="0dp"
+                tools:layout_editor_absoluteX="0dp"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_margin="4dp"
+                android:id="@+id/time_entry_monday_card"/>
+
+            <include
+                layout="@layout/content_time_entry_card"
+                tools:layout_editor_absoluteY="0dp"
+                tools:layout_editor_absoluteX="0dp"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_margin="4dp"
+                android:id="@+id/time_entry_tuesday_card"/>
+
+            <include
+                layout="@layout/content_time_entry_card"
+                tools:layout_editor_absoluteY="0dp"
+                tools:layout_editor_absoluteX="0dp"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_margin="4dp"
+                android:id="@+id/time_entry_wednesday_card"/>
+
+            <include
+                layout="@layout/content_time_entry_card"
+                tools:layout_editor_absoluteY="0dp"
+                tools:layout_editor_absoluteX="0dp"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_margin="4dp"
+                android:id="@+id/time_entry_thursday_card"/>
+
+            <include
+                layout="@layout/content_time_entry_card"
+                tools:layout_editor_absoluteY="0dp"
+                tools:layout_editor_absoluteX="0dp"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_margin="4dp"
+                android:id="@+id/time_entry_friday_card"/>
+
+            <include
+                layout="@layout/content_time_entry_card"
+                tools:layout_editor_absoluteY="0dp"
+                tools:layout_editor_absoluteX="0dp"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_margin="4dp"
+                android:id="@+id/time_entry_saturday_card"/>
+
+        </LinearLayout>
+    </ScrollView>
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:id="@+id/time_entry_week_total_card_view">
+
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_margin="4dp"
-            android:id="@+id/time_entry_monday_card"/>
+            android:layout_height="60dp">
 
-        <include
-            layout="@layout/content_time_entry_card"
-            tools:layout_editor_absoluteY="0dp"
-            tools:layout_editor_absoluteX="0dp"
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent"
-            android:layout_margin="4dp"
-            android:id="@+id/time_entry_tuesday_card"/>
+            <LinearLayout
+                android:id="@+id/time_entry_week_total_linear_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentStart="true"
+                android:orientation="vertical">
 
-        <include
-            layout="@layout/content_time_entry_card"
-            tools:layout_editor_absoluteY="0dp"
-            tools:layout_editor_absoluteX="0dp"
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent"
-            android:layout_margin="4dp"
-            android:id="@+id/time_entry_wednesday_card"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/time_entry_week_total_label"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Button" />
 
-        <include
-            layout="@layout/content_time_entry_card"
-            tools:layout_editor_absoluteY="0dp"
-            tools:layout_editor_absoluteX="0dp"
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent"
-            android:layout_margin="4dp"
-            android:id="@+id/time_entry_thursday_card"/>
+                <TextView
+                    android:id="@+id/time_entry_week_total"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@string/time_entry_week_total"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
 
-        <include
-            layout="@layout/content_time_entry_card"
-            tools:layout_editor_absoluteY="0dp"
-            tools:layout_editor_absoluteX="0dp"
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent"
-            android:layout_margin="4dp"
-            android:id="@+id/time_entry_friday_card"/>
+            </LinearLayout>
 
-        <include
-            layout="@layout/content_time_entry_card"
-            tools:layout_editor_absoluteY="0dp"
-            tools:layout_editor_absoluteX="0dp"
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent"
-            android:layout_margin="4dp"
-            android:id="@+id/time_entry_saturday_card"/>
+            <Button
+                android:id="@+id/time_entry_submit_button"
+                style="@style/Widget.AppCompat.Button.Colored"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true"
+                android:text="@string/time_entry_submit_button" />
 
-    </LinearLayout>
-</ScrollView>
-<!--<LinearLayout-->
-    <!--xmlns:android="http://schemas.android.com/apk/res/android"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="match_parent">-->
+        </RelativeLayout>
 
-    <!--<android.support.v7.widget.RecyclerView-->
-        <!--xmlns:android="http://schemas.android.com/apk/res/android"-->
-        <!--android:id="@+id/time_entry_week_recycler_view"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent">-->
+    </android.support.v7.widget.CardView>
 
-    <!--</android.support.v7.widget.RecyclerView>-->
-
-<!--</LinearLayout>-->
+</RelativeLayout>

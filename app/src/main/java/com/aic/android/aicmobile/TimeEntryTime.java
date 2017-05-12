@@ -1,7 +1,5 @@
 package com.aic.android.aicmobile;
 
-import java.util.List;
-
 /**
  * Created by JLM on 4/11/2017.
  */

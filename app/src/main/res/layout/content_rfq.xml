@@ -1,26 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v4.widget.NestedScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="8dp"
-    android:paddingLeft="8dp"
-    android:paddingRight="8dp"
-    android:paddingTop="8dp"
+    android:paddingBottom="4dp"
+    android:paddingLeft="4dp"
+    android:paddingRight="4dp"
+    android:paddingTop="4dp"
     tools:showIn="@layout/activity_main">
 
     <android.support.v7.widget.CardView
-        xmlns:card_view="http://schemas.android.com/apk/res-auto"
         android:id="@+id/rfq_card_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="4dp"
         android:elevation="2dp"
-        android:foreground="?android:attr/selectableItemBackground"
-        card_view:cardCornerRadius="4dp"
-        card_view:cardElevation="5dp">
+        android:foreground="?android:attr/selectableItemBackground">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -50,16 +46,25 @@
                 android:paddingRight="8dp"
                 android:paddingTop="8dp"
                 android:text="@string/rfq_content_count"
-                android:layout_below="@+id/rfq_title"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentBottom="true"
                 tools:layout_editor_absoluteX="8dp"
                 android:id="@+id/rfq_active_count"/>
+
+            <View
+                android:id="@+id/rfq_view_separator"
+                android:layout_below="@id/rfq_title"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/grey_300"/>
 
             <Button
                 android:id="@+id/rfq_add_new_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/rfq_add_new_button"
-                android:layout_alignParentRight="true"
+                android:layout_below="@id/rfq_view_separator"
+                android:layout_alignParentEnd="true"
                 android:layout_alignParentBottom="true"
                 android:background="?android:attr/selectableItemBackground"
                 style="@style/Widget.AppCompat.Button.Borderless.Colored"/>

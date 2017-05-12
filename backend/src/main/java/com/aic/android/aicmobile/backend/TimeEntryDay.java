@@ -13,6 +13,7 @@ public class TimeEntryDay {
     private float time;
     private Date date;
     private boolean billable;
+    private boolean submitted;
     private String note;
 
     public int getProjectNumber() {
@@ -37,6 +38,10 @@ public class TimeEntryDay {
 
     public boolean isBillable() {
         return billable;
+    }
+
+    public boolean isSubmitted() {
+        return submitted;
     }
 
     public String getNote() {
@@ -65,6 +70,10 @@ public class TimeEntryDay {
 
     public void setBillable(boolean billable) {
         this.billable = billable;
+    }
+
+    public void setSubmitted(boolean submitted) {
+        this.submitted = submitted;
     }
 
     public void setNote(String note) {

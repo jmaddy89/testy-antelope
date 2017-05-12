@@ -30,12 +30,32 @@
 
         </android.support.v7.widget.RecyclerView>
 
-        <TextView
-            android:id="@+id/time_entry_hours_total"
-            android:layout_alignBottom="@id/time_entry_recycler_view"
-            android:layout_alignParentEnd="true"
+        <View
+            android:id="@+id/time_entry_card_view_break"
+            android:layout_below="@id/time_entry_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/grey_300"/>
+
+        <Button
+            android:id="@+id/time_entry_add_new_button"
+            style="@style/Widget.AppCompat.Button.Borderless.Colored"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_below="@id/time_entry_card_view_break"
+            android:text="@string/time_entry_add_new_button"/>
+
+        <TextView
+            android:id="@+id/time_entry_hours_total"
+            android:layout_alignParentEnd="true"
+            android:layout_alignBottom="@id/time_entry_add_new_button"
+            android:layout_marginBottom="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAllCaps="true"
+            android:textStyle="bold"
             android:text="@string/time_entry_hours_total"/>
 
     </RelativeLayout>
