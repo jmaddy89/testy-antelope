@@ -47,6 +47,16 @@
     <!--Time Entry Dialog-->
     <string name="time_entry_dialog_submit">Submit</string>
     <string name="time_entry_dialog_project_label">Select Project:</string>
+    <string name="time_entry_dialog_project_select">Select Project</string>
+    <string name="time_entry_dialog_header">Add New Time Entry</string>
+    <string name="time_entry_dialog_deliverable_label">Select Deliverable:</string>
+    <string name="time_entry_dialog_role_label">Select Role:</string>
+    <string name="time_entry_dialog_date_label">Select Date:</string>
+    <string name="time_entry_dialog_date_select">Monday, May 5</string>
+    <string name="time_entry_dialog_hours_label">Enter time:</string>
+    <string name="time_entry_dialog_hours_select">0.0</string>
+    <string name="time_entry_dialog_note_label">Enter note:</string>
+    <string name="time_entry_dialog_note_text">Enter note</string>
 
     <!--Login Activity-->
     <string name="label_google_sign_in">Firebase + Google Sign In</string>

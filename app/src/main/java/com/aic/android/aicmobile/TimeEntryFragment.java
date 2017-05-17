@@ -31,7 +31,9 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by JLM on 4/9/2017.
@@ -46,10 +48,12 @@ public class TimeEntryFragment extends Fragment {
 
     private static final String TAG = "TimeEntryFragment";
     private static final String ARG_WEEK_NUBMER = "week_number";
+    private static final String ARG_YEAR = "year_number";
 
     private static final String APP_URL = "https://aic-mobile-5fdf1.appspot.com/_ah/api/";
 
     private int mWeekNumber;
+    private int mYearNumber;
 
     // Day labels
     private TextView mSundayLabel;
@@ -123,10 +127,13 @@ public class TimeEntryFragment extends Fragment {
     private Resources mResource;
 
     // Create new instance of fragment, called from parent view pager found in Time Entry Activity
-    public static TimeEntryFragment newInstance(int week) {
+    public static TimeEntryFragment newInstance(int week, int year) {
+        // Create bundle and put arguements of week and year number from above time entry activity
         Bundle args = new Bundle();
         args.putSerializable(ARG_WEEK_NUBMER, week);
+        args.putSerializable(ARG_YEAR, year);
 
+        // Create fragment, add arguements and return
         TimeEntryFragment fragment = new TimeEntryFragment();
         fragment.setArguments(args);
         return fragment;
@@ -136,7 +143,10 @@ public class TimeEntryFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        // Get week and year from view pager in above time entry activity
         mWeekNumber = (int) getArguments().getSerializable(ARG_WEEK_NUBMER);
+        mYearNumber = (int) getArguments().getSerializable(ARG_YEAR);
+        Log.i(TAG, "Week Number during create is: " + mWeekNumber);
     }
 
     @Override
@@ -203,6 +213,30 @@ public class TimeEntryFragment extends Fragment {
                 addNewTimeEntry(3);
             }
         });
+        mWednesdayAddNew.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addNewTimeEntry(4);
+            }
+        });
+        mThursdayAddNew.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addNewTimeEntry(5);
+            }
+        });
+        mFridayAddNew.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addNewTimeEntry(6);
+            }
+        });
+        mSaturdayAddNew.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addNewTimeEntry(7);
+            }
+        });
 
         // Initialize recycler views for each day
         mSundayRecyclerView = (RecyclerView) mSundayCard.findViewById(R.id.time_entry_recycler_view);
@@ -212,6 +246,15 @@ public class TimeEntryFragment extends Fragment {
         mThursdayRecyclerView = (RecyclerView) mThursdayCard.findViewById(R.id.time_entry_recycler_view);
         mFridayRecyclerView = (RecyclerView) mFridayCard.findViewById(R.id.time_entry_recycler_view);
         mSaturdayRecyclerView = (RecyclerView) mSaturdayCard.findViewById(R.id.time_entry_recycler_view);
+
+        // Set nested scrolling to false to allow smooth scrolling within the nested scroll view
+        mSundayRecyclerView.setNestedScrollingEnabled(false);
+        mMondayRecyclerView.setNestedScrollingEnabled(false);
+        mTuesdayRecyclerView.setNestedScrollingEnabled(false);
+        mWednesdayRecyclerView.setNestedScrollingEnabled(false);
+        mThursdayRecyclerView.setNestedScrollingEnabled(false);
+        mFridayRecyclerView.setNestedScrollingEnabled(false);
+        mSaturdayRecyclerView.setNestedScrollingEnabled(false);
 
         // Set layout managers
         mSundayRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -237,7 +280,7 @@ public class TimeEntryFragment extends Fragment {
 
     public void setupAdapters() {
         // Build sunday day list and set adapter
-        mSunday = TimeEntryWeekLoader.initializeDayList(mWeekNumber, 1, mDay);
+        mSunday = TimeEntryWeekLoader.initializeDayList(mWeekNumber, mYearNumber, 1, mDay);
         mSundayAdapter = new TimeAdapter(mSunday);
         mSundayRecyclerView.setAdapter(mSundayAdapter);
 
@@ -246,7 +289,7 @@ public class TimeEntryFragment extends Fragment {
         mSundayTotal.setText("Total: " + sundayTotal);
 
         // Build monday day list and set adapter
-        mMonday = TimeEntryWeekLoader.initializeDayList(mWeekNumber, 2, mDay);
+        mMonday = TimeEntryWeekLoader.initializeDayList(mWeekNumber, mYearNumber, 2, mDay);
         mMondayAdapter = new TimeAdapter(mMonday);
         mMondayRecyclerView.setAdapter(mMondayAdapter);
 
@@ -255,7 +298,7 @@ public class TimeEntryFragment extends Fragment {
         mMondayTotal.setText("Total: " + mondayTotal);
 
         // Build tuesday day list and set adapter
-        mTuesday = TimeEntryWeekLoader.initializeDayList(mWeekNumber, 3, mDay);
+        mTuesday = TimeEntryWeekLoader.initializeDayList(mWeekNumber, mYearNumber, 3, mDay);
         mTuesdayAdapter = new TimeAdapter(mTuesday);
         mTuesdayRecyclerView.setAdapter(mTuesdayAdapter);
 
@@ -264,7 +307,7 @@ public class TimeEntryFragment extends Fragment {
         mTuesdayTotal.setText("Total: " + tuesdayTotal);
 
         // Build wednesday day list and set adapter
-        mWednesday = TimeEntryWeekLoader.initializeDayList(mWeekNumber, 4, mDay);
+        mWednesday = TimeEntryWeekLoader.initializeDayList(mWeekNumber, mYearNumber, 4, mDay);
         mWednesdayAdapter = new TimeAdapter(mWednesday);
         mWednesdayRecyclerView.setAdapter(mWednesdayAdapter);
 
@@ -273,7 +316,7 @@ public class TimeEntryFragment extends Fragment {
         mWednesdayTotal.setText("Total: " + wednesdayTotal);
 
         // Build thursday day list and set adapter
-        mThursday = TimeEntryWeekLoader.initializeDayList(mWeekNumber, 5, mDay);
+        mThursday = TimeEntryWeekLoader.initializeDayList(mWeekNumber, mYearNumber, 5, mDay);
         mThursdayAdapter = new TimeAdapter(mThursday);
         mThursdayRecyclerView.setAdapter(mThursdayAdapter);
 
@@ -282,7 +325,7 @@ public class TimeEntryFragment extends Fragment {
         mThursdayTotal.setText("Total: " + thursdayTotal);
 
         // Build friday day list and set adapter
-        mFriday = TimeEntryWeekLoader.initializeDayList(mWeekNumber, 6, mDay);
+        mFriday = TimeEntryWeekLoader.initializeDayList(mWeekNumber, mYearNumber, 6, mDay);
         mFridayAdapter = new TimeAdapter(mFriday);
         mFridayRecyclerView.setAdapter(mFridayAdapter);
 
@@ -291,7 +334,7 @@ public class TimeEntryFragment extends Fragment {
         mFridayTotal.setText("Total: " + fridayTotal);
 
         // Build saturday day list and set adapter
-        mSaturday = TimeEntryWeekLoader.initializeDayList(mWeekNumber, 0, mDay);
+        mSaturday = TimeEntryWeekLoader.initializeDayList(mWeekNumber, mYearNumber, 0, mDay);
         mSaturdayAdapter = new TimeAdapter(mSaturday);
         mSaturdayRecyclerView.setAdapter(mSaturdayAdapter);
 
@@ -310,7 +353,7 @@ public class TimeEntryFragment extends Fragment {
         int dayOfWeek = cal.get(Calendar.DAY_OF_WEEK);
 
         // Set date format
-        SimpleDateFormat sdf = new SimpleDateFormat("EEEE, MMM d");
+        SimpleDateFormat sdf = new SimpleDateFormat("EEEE, MMM d", Locale.US);
 
         // Normalize day, adding 1 - day of week gives sunday, update label
         cal.add(Calendar.DAY_OF_WEEK, 1 - dayOfWeek);
@@ -369,7 +412,15 @@ public class TimeEntryFragment extends Fragment {
     }
 
     public void addNewTimeEntry(int dayNumber) {
-        DialogFragment fragment = TimeEntryAddFragment.newInstance();
+        // Set calendar object to get correct date for time entry dialog
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.DAY_OF_WEEK, dayNumber);
+        cal.set(Calendar.WEEK_OF_YEAR, mWeekNumber);
+        cal.set(Calendar.YEAR, mYearNumber);
+        Date date = cal.getTime();
+
+        // Create time entry dialog fragment
+        DialogFragment fragment = TimeEntryAddFragment.newInstance(date);
         fragment.show(getFragmentManager(), "Add New Time Entry Dialog");
     }
 

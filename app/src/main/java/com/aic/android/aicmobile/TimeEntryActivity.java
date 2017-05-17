@@ -11,6 +11,8 @@ import android.widget.TextView;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
+import java.util.TimeZone;
 
 /**
  * Created by JLM on 4/9/2017.
@@ -43,7 +45,7 @@ public class TimeEntryActivity extends AppCompatActivity /* SingleFragmentActivi
             @Override
             public Fragment getItem(int position) {
                 TimeEntryTime time = mTime.get(position);
-                return TimeEntryFragment.newInstance(time.getWeekNumber());
+                return TimeEntryFragment.newInstance(time.getWeekNumber(), time.getWeekYear());
             }
 
             @Override
@@ -83,11 +85,13 @@ public class TimeEntryActivity extends AppCompatActivity /* SingleFragmentActivi
 
     // Update label at top of page
     public void updateHeaderLabel(int position) {
-        SimpleDateFormat sdf = new SimpleDateFormat("MMMM dd, yyyy");
+        SimpleDateFormat sdf = new SimpleDateFormat("MMMM dd, yyyy", Locale.US);
         Calendar cal = Calendar.getInstance();
+        cal.setTimeZone(TimeZone.getDefault());
 
         // Set week from position
         cal.set(Calendar.WEEK_OF_YEAR, mTime.get(position).getWeekNumber());
+        cal.set(Calendar.YEAR, mTime.get(position).getWeekYear());
 
         // Get day of week and find sunday
         int dayOfWeek = cal.get(Calendar.DAY_OF_WEEK);

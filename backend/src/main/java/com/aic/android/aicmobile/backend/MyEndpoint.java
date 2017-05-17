@@ -22,6 +22,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import javax.inject.Named;
 
@@ -198,6 +199,48 @@ public class MyEndpoint {
         return contacts;
     }
 
+    @ApiMethod(name = "getDeliverables")
+    public List<Deliverables> getDeliverables(@Named("projectNumber") int projectNumber) {
+
+        List<Deliverables> deliverables = new ArrayList<>();
+        try {
+
+            Class.forName(DRIVER);
+
+            String finalQuery = "SELECT * FROM labor_description WHERE proj_number=?";
+
+            try {
+                Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+                PreparedStatement stmt = conn.prepareStatement(finalQuery);
+                stmt.setInt(1, projectNumber);
+
+                ResultSet rs = stmt.executeQuery();
+
+                //Loop through result set and set customer contact list
+                while (rs.next()) {
+                    Deliverables deliverable = new Deliverables();
+                    deliverable.setProjectNumber(rs.getInt("proj_number"));
+                    deliverable.setCoNumber(rs.getInt("co_number"));
+                    deliverable.setOptionNumber(rs.getInt("option_number"));
+                    deliverable.setDeliverableId(rs.getInt("task_number"));
+                    deliverable.setDeliverableDesc(rs.getString("task_description"));
+                    deliverables.add(deliverable);
+                }
+            } catch(Exception e) {
+                Deliverables fail = new Deliverables();
+                fail.setDeliverableDesc(e.toString());
+                deliverables.add(fail);
+                return deliverables;
+            }
+        } catch(Exception e) {
+            Deliverables fail = new Deliverables();
+            fail.setDeliverableDesc(e.toString());
+            deliverables.add(fail);
+            return deliverables;
+        }
+        return deliverables;
+    }
+
     @ApiMethod(name = "submitRFQ")
     public MyBean submitRFQ(NewProject projectInfo) {
 
@@ -345,7 +388,7 @@ public class MyEndpoint {
     public List<TimeEntryDay> downloadTime(TimeEntryRequestDayInfo request) {
         List<TimeEntryDay> time = new ArrayList<>();
 
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
 
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.YEAR, request.getYear());
