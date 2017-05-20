@@ -2,6 +2,7 @@ package com.aic.android.aicmobile;
 
 import android.annotation.TargetApi;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.AsyncTask;
@@ -11,13 +12,16 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.PopupWindow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.aic.android.aicmobile.backend.aicDataAPI.model.TimeEntryRequestDayInfo;
 import com.aic.android.aicmobile.backend.aicDataAPI.AicDataAPI;
@@ -39,9 +43,6 @@ import java.util.Locale;
  * Created by JLM on 4/9/2017.
  *
  * For reference:
- * Time refers to the whole list view
- * Week refers to the horizontal scrolling view
- * Day refers to the card view
  */
 
 public class TimeEntryFragment extends Fragment {
@@ -49,6 +50,7 @@ public class TimeEntryFragment extends Fragment {
     private static final String TAG = "TimeEntryFragment";
     private static final String ARG_WEEK_NUBMER = "week_number";
     private static final String ARG_YEAR = "year_number";
+    private static final String ARG_DATE = "date";
 
     private static final String APP_URL = "https://aic-mobile-5fdf1.appspot.com/_ah/api/";
 
@@ -108,6 +110,8 @@ public class TimeEntryFragment extends Fragment {
     private Button mThursdayAddNew;
     private Button mFridayAddNew;
     private Button mSaturdayAddNew;
+
+    private Button mSubmitWeek;
 
     // Day list of info for whole week
     private List<TimeEntryDay> mDay = new ArrayList<>();
@@ -268,14 +272,28 @@ public class TimeEntryFragment extends Fragment {
         // Initialize week total
         mWeekTotal = (TextView) view.findViewById(R.id.time_entry_week_total);
 
+        // Initialize submit week button
+        mSubmitWeek = (Button) view.findViewById(R.id.time_entry_submit_week_button);
+        mSubmitWeek.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new SubmitWeekTime().execute();
+            }
+        });
+
         // Set labels
         updateCardLabels(mWeekNumber);
 
         // Download time
-        new DownloadTime().execute();
+        updateData();
 
         // Return view to above activity to use
         return view;
+    }
+
+    public void updateData() {
+        // Download time via async tasks
+        new DownloadTime().execute();
     }
 
     public void setupAdapters() {
@@ -285,8 +303,10 @@ public class TimeEntryFragment extends Fragment {
         mSundayRecyclerView.setAdapter(mSundayAdapter);
 
         // Get hour totals for sunday
-        float sundayTotal = updateDayTotals(mSunday);
-        mSundayTotal.setText("Total: " + sundayTotal);
+        if (isAdded()) {
+            float sundayTotal = updateDayTotals(mSunday);
+            mSundayTotal.setText(getString(R.string.time_entry_week_total, String.format(Locale.US, "%.1f", sundayTotal)));
+        }
 
         // Build monday day list and set adapter
         mMonday = TimeEntryWeekLoader.initializeDayList(mWeekNumber, mYearNumber, 2, mDay);
@@ -294,8 +314,10 @@ public class TimeEntryFragment extends Fragment {
         mMondayRecyclerView.setAdapter(mMondayAdapter);
 
         // Get hour totals for monday
-        float mondayTotal = updateDayTotals(mMonday);
-        mMondayTotal.setText("Total: " + mondayTotal);
+        if (isAdded()) {
+            float mondayTotal = updateDayTotals(mMonday);
+            mMondayTotal.setText(getString(R.string.time_entry_week_total, String.format(Locale.US, "%.1f", mondayTotal)));
+        }
 
         // Build tuesday day list and set adapter
         mTuesday = TimeEntryWeekLoader.initializeDayList(mWeekNumber, mYearNumber, 3, mDay);
@@ -303,8 +325,10 @@ public class TimeEntryFragment extends Fragment {
         mTuesdayRecyclerView.setAdapter(mTuesdayAdapter);
 
         // Get hour totals for tuesday
-        float tuesdayTotal = updateDayTotals(mTuesday);
-        mTuesdayTotal.setText("Total: " + tuesdayTotal);
+        if (isAdded()) {
+            float tuesdayTotal = updateDayTotals(mTuesday);
+            mTuesdayTotal.setText(getString(R.string.time_entry_week_total, String.format(Locale.US, "%.1f",tuesdayTotal)));
+        }
 
         // Build wednesday day list and set adapter
         mWednesday = TimeEntryWeekLoader.initializeDayList(mWeekNumber, mYearNumber, 4, mDay);
@@ -312,8 +336,10 @@ public class TimeEntryFragment extends Fragment {
         mWednesdayRecyclerView.setAdapter(mWednesdayAdapter);
 
         // Get hour totals for wednesday
-        float wednesdayTotal = updateDayTotals(mWednesday);
-        mWednesdayTotal.setText("Total: " + wednesdayTotal);
+        if (isAdded()) {
+            float wednesdayTotal = updateDayTotals(mWednesday);
+            mWednesdayTotal.setText(getString(R.string.time_entry_week_total, String.format(Locale.US, "%.1f", wednesdayTotal)));
+        }
 
         // Build thursday day list and set adapter
         mThursday = TimeEntryWeekLoader.initializeDayList(mWeekNumber, mYearNumber, 5, mDay);
@@ -321,8 +347,10 @@ public class TimeEntryFragment extends Fragment {
         mThursdayRecyclerView.setAdapter(mThursdayAdapter);
 
         // Get hour totals for thursday
-        float thursdayTotal = updateDayTotals(mThursday);
-        mThursdayTotal.setText("Total: " + thursdayTotal);
+        if (isAdded()) {
+            float thursdayTotal = updateDayTotals(mThursday);
+            mThursdayTotal.setText(getString(R.string.time_entry_week_total, String.format(Locale.US, "%.1f", thursdayTotal)));
+        }
 
         // Build friday day list and set adapter
         mFriday = TimeEntryWeekLoader.initializeDayList(mWeekNumber, mYearNumber, 6, mDay);
@@ -330,8 +358,10 @@ public class TimeEntryFragment extends Fragment {
         mFridayRecyclerView.setAdapter(mFridayAdapter);
 
         // Get hour totals for friday
-        float fridayTotal = updateDayTotals(mFriday);
-        mFridayTotal.setText("Total: " + fridayTotal);
+        if (isAdded()) {
+            float fridayTotal = updateDayTotals(mFriday);
+            mFridayTotal.setText(getString(R.string.time_entry_week_total, String.format(Locale.US, "%.1f", fridayTotal)));
+        }
 
         // Build saturday day list and set adapter
         mSaturday = TimeEntryWeekLoader.initializeDayList(mWeekNumber, mYearNumber, 0, mDay);
@@ -339,8 +369,10 @@ public class TimeEntryFragment extends Fragment {
         mSaturdayRecyclerView.setAdapter(mSaturdayAdapter);
 
         // Get hour totals for saturday
-        float saturdayTotal = updateDayTotals(mSaturday);
-        mSaturdayTotal.setText("Total: " + saturdayTotal);
+        if (isAdded()) {
+            float saturdayTotal = updateDayTotals(mSaturday);
+            mSaturdayTotal.setText(getString(R.string.time_entry_week_total, String.format(Locale.US, "%.1f", saturdayTotal)));
+        }
     }
 
     public void updateCardLabels(int weekNumber) {
@@ -419,8 +451,19 @@ public class TimeEntryFragment extends Fragment {
         cal.set(Calendar.YEAR, mYearNumber);
         Date date = cal.getTime();
 
-        // Create time entry dialog fragment
-        DialogFragment fragment = TimeEntryAddFragment.newInstance(date);
+        // Create bundle and put date into bundle
+        Bundle args = new Bundle();
+        args.putSerializable(ARG_DATE, date);
+
+        // Create fragment and bundle date into fragment
+        TimeEntryAddFragment fragment = new TimeEntryAddFragment();
+        fragment.setArguments(args);
+        fragment.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                updateData();
+            }
+        });
         fragment.show(getFragmentManager(), "Add New Time Entry Dialog");
     }
 
@@ -487,12 +530,11 @@ public class TimeEntryFragment extends Fragment {
     }
 
     /*
-Asychronous task to download project list
+Asychronous task to download time list
  */
     private class DownloadTime extends AsyncTask<Void, Void, List<TimeEntryDay>> {
         private AicDataAPI myApiService = null;
-        private static final String TAG = "EndpointsAsyncTask";
-        private ProgressDialog dialog = new ProgressDialog(getActivity());
+//        private ProgressDialog dialog = new ProgressDialog(getActivity());
 
         @Override
         protected void onPreExecute() {
@@ -519,22 +561,19 @@ Asychronous task to download project list
             TimeEntryRequestDayInfo requestInfo = new TimeEntryRequestDayInfo();
             requestInfo.setUserId(user.getUid());
             requestInfo.setWeekNumber(mWeekNumber);
-            requestInfo.setYear(2017);
-
+            requestInfo.setYear(mYearNumber);
 
             try {
                 List<TimeEntryDay> raw = myApiService.downloadTime(requestInfo).execute().getItems();
                 return parseItems(raw);
             } catch (IOException e) {
-                Log.i(TAG, "IO Exception", e);
-                List<TimeEntryDay> fail = new ArrayList<>();
-                return fail;
+                return new ArrayList<>();
             }
         }
 
         @Override
         protected void onPostExecute(List<TimeEntryDay> s) {
-            mDay.addAll(s);
+            mDay = s;
             setupAdapters();
             updateWeekTotals(mDay);
 
@@ -543,16 +582,11 @@ Asychronous task to download project list
 //                dialog.dismiss();
 //            }
 
-            try {
-                Log.i(TAG, "Response from google endpoint: " + s.toString());
-            } catch (Exception e) {
-                Log.i(TAG, "Response from google endpoint is null: " + e.toString());
-            }
         }
     }
 
     /*
-    Used for to clean up response from google endpoint
+    Used for to clean up response from google endpoint for time entry
      */
     private List<TimeEntryDay> parseItems(List<TimeEntryDay> raw) {
 
@@ -580,5 +614,63 @@ Asychronous task to download project list
             times.add(time);
         }
         return times;
+    }
+
+    /*
+Asychronous task to submit week of time
+ */
+    private class SubmitWeekTime extends AsyncTask<Void, Void, String> {
+        private AicDataAPI myApiService = null;
+        private ProgressDialog dialog = new ProgressDialog(getActivity());
+
+        @Override
+        protected void onPreExecute() {
+            this.dialog.setMessage("Submitting Time");
+            this.dialog.show();
+        }
+
+        @Override
+        protected String doInBackground(Void... params) {
+            if (myApiService == null) {
+                AicDataAPI.Builder builder = new AicDataAPI.Builder(AndroidHttp.newCompatibleTransport(), new AndroidJsonFactory(), null)
+                        //Root url of google cloud project
+                        .setRootUrl(APP_URL);
+                myApiService = builder.build();
+            }
+
+            // Get logged in users firebase id
+            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+            // Setup request info to download time
+            TimeEntryRequestDayInfo requestInfo = new TimeEntryRequestDayInfo();
+            requestInfo.setUserId(user.getUid());
+            requestInfo.setWeekNumber(mWeekNumber);
+            requestInfo.setYear(mYearNumber);
+
+            try {
+                return myApiService.submitWeekTime(requestInfo).execute().getData();
+            } catch (IOException e) {
+                return e.toString();
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            // Dismiss loading dialog
+            if (dialog.isShowing()) {
+                dialog.dismiss();
+            }
+
+            // If successful, refresh to show change in submitted state
+            if (s.matches("Time submitted successfully!")) {
+                updateData();
+            }
+
+            // Inform user of success or fail
+            Toast.makeText(getContext(), s, Toast.LENGTH_LONG).show();
+
+
+
+        }
     }
 }

@@ -61,26 +61,6 @@
         android:layout_below="@+id/rfq_add_customer_contact_label"
         android:hint="@string/rfq_add_customer_contact_hint"/>
 
-    <!--<TextView-->
-        <!--android:id="@+id/rfq_add_due_date_label"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_marginTop="16dp"-->
-        <!--android:layout_below="@+id/rfq_add_edit_customer_contact"-->
-        <!--android:layout_alignParentStart="true"-->
-        <!--android:layout_alignParentEnd="true"-->
-        <!--android:text="@string/rfq_add_rfq_due_date_label"/>-->
-
-    <!--<Button-->
-        <!--android:id="@+id/rfq_add_due_date_button"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_below="@+id/rfq_add_due_date_label"-->
-        <!--android:layout_alignParentEnd="true"-->
-        <!--android:layout_alignParentStart="true"-->
-        <!--android:text="@string/rfq_add_rfq_due_date_button"-->
-        <!--style="@style/Widget.AppCompat.Button"/>-->
-
     <Button
         android:id="@+id/rfq_add_submit_button"
         style="@style/Widget.AppCompat.Button.Colored"

@@ -8,6 +8,7 @@ import java.io.Serializable;
 
 public class Projects implements Serializable {
 
+    private int projectId;
     private int projectNum;
     private String customer;
     private String projectDesc;
@@ -16,6 +17,10 @@ public class Projects implements Serializable {
     private int projectStatus;
     private String aicContact;
     private String customerContact;
+
+    public int getProjectId() {
+        return projectId;
+    }
 
     public int getProjectNum() {
         return projectNum;
@@ -47,6 +52,10 @@ public class Projects implements Serializable {
 
     public String getCustomerContact() {
         return customerContact;
+    }
+
+    public void setProjectId(int projectId) {
+        this.projectId = projectId;
     }
 
     public void setProjectNum(int projectNum) {

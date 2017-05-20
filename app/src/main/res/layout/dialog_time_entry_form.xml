@@ -1,122 +1,206 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:padding="8dp">
 
-    <TextView
-        android:id="@+id/time_entry_dialog_header"
+    <ScrollView
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:text="@string/time_entry_dialog_header"
-        android:textAppearance="@style/TextAppearance.AppCompat.Headline" />
+        android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/time_entry_dialog_project_label"
-        android:layout_below="@id/time_entry_dialog_header"
-        android:layout_marginTop="16dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/time_entry_dialog_project_label"/>
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
 
-    <Spinner
-        android:id="@+id/time_entry_dialog_project_select"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/time_entry_dialog_project_label"
-        android:layout_alignParentStart="true"
-        android:prompt="@string/time_entry_dialog_project_select"/>
+            <TextView
+                android:id="@+id/time_entry_dialog_header"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:text="@string/time_entry_dialog_header"
+                android:textAppearance="@style/TextAppearance.AppCompat.Headline" />
 
-    <TextView
-        android:id="@+id/time_entry_dialog_deliverable_label"
-        android:layout_below="@id/time_entry_dialog_project_select"
-        android:layout_marginTop="16dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/time_entry_dialog_deliverable_label"/>
+            <TextView
+                android:id="@+id/time_entry_dialog_project_label"
+                android:layout_below="@id/time_entry_dialog_header"
+                android:layout_marginTop="16dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/time_entry_dialog_project_label"/>
 
-    <Spinner
-        android:id="@+id/time_entry_dialog_deliverable_select"
-        android:layout_below="@id/time_entry_dialog_deliverable_label"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+            <LinearLayout
+                android:id="@+id/time_entry_dialog_header_layout"
+                android:layout_below="@id/time_entry_dialog_project_label"
+                android:layout_marginTop="8dp"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/time_entry_dialog_role_label"
-        android:layout_below="@id/time_entry_dialog_deliverable_select"
-        android:layout_marginTop="16dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/time_entry_dialog_role_label"/>
+                <ProgressBar
+                    style="@android:style/Widget.DeviceDefault.Light.ProgressBar.Small"
+                    android:id="@+id/time_entry_dialog_loading_projects_progress"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
 
-    <Spinner
-        android:id="@+id/time_entry_dialog_role_select"
-        android:layout_below="@id/time_entry_dialog_role_label"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+                <TextView
+                    android:id="@+id/time_entry_dialog_loading_projects_label"
+                    android:layout_marginStart="4dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/time_entry_dialog_loading_projects_label"/>
 
-    <TextView
-        android:id="@+id/time_entry_dialog_date_label"
-        android:layout_below="@id/time_entry_dialog_role_select"
-        android:layout_marginTop="16dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/time_entry_dialog_date_label"/>
+            </LinearLayout>
 
-    <TextView
-        android:id="@+id/time_entry_dialog_date_select"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/time_entry_dialog_date_label"
-        android:inputType="datetime"
-        android:text="@string/time_entry_dialog_date_select"
-        android:textAppearance="@style/TextAppearance.AppCompat.Headline" />
+            <Spinner
+                android:id="@+id/time_entry_dialog_project_select"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/time_entry_dialog_project_label"
+                android:layout_alignParentStart="true"
+                android:prompt="@string/time_entry_dialog_project_select"/>
 
-    <TextView
-        android:id="@+id/time_entry_dialog_hours_label"
-        android:layout_below="@id/time_entry_dialog_date_select"
-        android:layout_marginTop="16dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/time_entry_dialog_hours_label"/>
+            <TextView
+                android:id="@+id/time_entry_dialog_deliverable_label"
+                android:layout_below="@id/time_entry_dialog_project_select"
+                android:layout_marginTop="16dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/time_entry_dialog_deliverable_label"/>
 
-    <EditText
-        android:id="@+id/time_entry_dialog_hours_select"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/time_entry_dialog_hours_label"
-        android:inputType="numberDecimal"
-        android:text="@string/time_entry_dialog_hours_select"
-        android:textAppearance="@style/TextAppearance.AppCompat.Headline" />
+            <LinearLayout
+                android:id="@+id/time_entry_dialog_deliverable_layout"
+                android:layout_below="@id/time_entry_dialog_deliverable_label"
+                android:layout_marginTop="8dp"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/time_entry_dialog_note_label"
-        android:layout_below="@id/time_entry_dialog_hours_select"
-        android:layout_marginTop="16dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/time_entry_dialog_note_label"/>
+                <ProgressBar
+                    style="@android:style/Widget.DeviceDefault.Light.ProgressBar.Small"
+                    android:id="@+id/time_entry_dialog_loading_deliverables_progress"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
 
-    <EditText
-        android:id="@+id/time_entry_dialog_note_text"
-        android:layout_below="@id/time_entry_dialog_note_label"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/time_entry_dialog_note_text"/>
+                <TextView
+                    android:id="@+id/time_entry_dialog_loading_deliverables_label"
+                    android:layout_marginStart="4dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/time_entry_dialog_loading_deliverables_label"/>
 
-    <Button
-        android:id="@+id/time_entry_dialog_submit"
-        style="@style/Widget.AppCompat.Button.Colored"
-        android:layout_marginTop="16dp"
-        android:layout_below="@id/time_entry_dialog_note_text"
-        android:layout_alignParentEnd="true"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/time_entry_dialog_submit" />
+            </LinearLayout>
 
-</RelativeLayout>
+            <Spinner
+                android:id="@+id/time_entry_dialog_deliverable_select"
+                android:layout_below="@id/time_entry_dialog_deliverable_label"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:id="@+id/time_entry_dialog_role_label"
+                android:layout_below="@id/time_entry_dialog_deliverable_select"
+                android:layout_marginTop="16dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/time_entry_dialog_role_label"/>
+
+            <LinearLayout
+                android:id="@+id/time_entry_dialog_role_layout"
+                android:layout_below="@id/time_entry_dialog_role_label"
+                android:layout_marginTop="8dp"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ProgressBar
+                    style="@android:style/Widget.DeviceDefault.Light.ProgressBar.Small"
+                    android:id="@+id/time_entry_dialog_loading_role_progress"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:id="@+id/time_entry_dialog_loading_role_label"
+                    android:layout_marginStart="4dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/time_entry_dialog_loading_role_label"/>
+
+            </LinearLayout>
+
+            <Spinner
+                android:id="@+id/time_entry_dialog_role_select"
+                android:layout_below="@id/time_entry_dialog_role_label"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:id="@+id/time_entry_dialog_date_label"
+                android:layout_below="@id/time_entry_dialog_role_select"
+                android:layout_marginTop="16dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/time_entry_dialog_date_label"/>
+
+            <TextView
+                android:id="@+id/time_entry_dialog_date_select"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/time_entry_dialog_date_label"
+                android:inputType="datetime"
+                android:text="@string/time_entry_dialog_date_select"
+                android:textAppearance="@style/TextAppearance.AppCompat.Headline" />
+
+            <TextView
+                android:id="@+id/time_entry_dialog_hours_label"
+                android:layout_below="@id/time_entry_dialog_date_select"
+                android:layout_marginTop="16dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/time_entry_dialog_hours_label"/>
+
+            <EditText
+                android:id="@+id/time_entry_dialog_hours_select"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/time_entry_dialog_hours_label"
+                android:inputType="numberDecimal"
+                android:hint="@string/time_entry_dialog_hours_select"
+                android:textAppearance="@style/TextAppearance.AppCompat.Headline" />
+
+            <TextView
+                android:id="@+id/time_entry_dialog_note_label"
+                android:layout_below="@id/time_entry_dialog_hours_select"
+                android:layout_marginTop="16dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/time_entry_dialog_note_label"/>
+
+            <EditText
+                android:id="@+id/time_entry_dialog_note_text"
+                android:layout_below="@id/time_entry_dialog_note_label"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/time_entry_dialog_note_text"/>
+
+            <Button
+                android:id="@+id/time_entry_dialog_submit"
+                style="@style/Widget.AppCompat.Button.Colored"
+                android:layout_marginTop="16dp"
+                android:layout_below="@id/time_entry_dialog_note_text"
+                android:layout_alignParentEnd="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/time_entry_dialog_submit" />
+
+        </RelativeLayout>
+
+    </ScrollView>
+
+</LinearLayout>

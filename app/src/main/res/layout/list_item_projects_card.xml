@@ -44,7 +44,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
-            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:text="@string/project_list_number"/>
 
         <ProgressBar
@@ -53,14 +53,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/project_customer_icon"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentStart="true"
             android:progressTint="@color/project_list_progress"/>
 
         <TextView
             android:id="@+id/project_budget"
             android:layout_below="@id/project_burn_progress"
-            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/project_budget"/>
@@ -68,7 +68,7 @@
         <TextView
             android:id="@+id/project_burn"
             android:layout_below="@+id/project_burn_progress"
-            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/project_burn"/>
@@ -76,16 +76,16 @@
         <TextView
             android:id="@+id/project_burn_percent"
             android:layout_below="@+id/project_burn_progress"
-            android:layout_toRightOf="@+id/project_burn"
-            android:layout_toLeftOf="@+id/project_budget"
+            android:layout_centerHorizontal="true"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:text="@string/project_burn_percent"/>
 
         <TextView
             android:id="@+id/project_status"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:layout_below="@+id/project_budget"
             android:textStyle="bold"/>
     </RelativeLayout>

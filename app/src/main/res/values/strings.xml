@@ -3,11 +3,12 @@
 
     <!--Content Projects Card-->
     <string name="project_content_title">Projects</string>
-    <string name="project_content_count">54 open projects</string>
+    <string name="project_content_active_count">%1$d open projects</string>
+    <string name="project_content_complete_count">%1$d complete projects</string>
 
     <!--Content RFQ Card-->
     <string name="rfq_content_title">RFQs</string>
-    <string name="rfq_content_count">12 open RFQs</string>
+    <string name="rfq_content_incomplete_count">%1$d open RFQs</string>
     <string name="rfq_add_new_button">Add New</string>
 
     <!--Content Time Entry Card-->
@@ -41,11 +42,14 @@
 
     <!--Time Entry Fragment-->
     <string name="time_entry_week_total_label">Week Total</string>
-    <string name="time_entry_week_total">%1$f</string>
+    <string name="time_entry_week_total">Total: %1$s</string>
     <string name="time_entry_submit_button">Submit Time</string>
 
     <!--Time Entry Dialog-->
     <string name="time_entry_dialog_submit">Submit</string>
+    <string name="time_entry_dialog_loading_projects_label">Loading Projects</string>
+    <string name="time_entry_dialog_loading_deliverables_label">Loading Deliverables</string>
+    <string name="time_entry_dialog_loading_role_label">Loading Roles</string>
     <string name="time_entry_dialog_project_label">Select Project:</string>
     <string name="time_entry_dialog_project_select">Select Project</string>
     <string name="time_entry_dialog_header">Add New Time Entry</string>
@@ -92,7 +96,7 @@
     <string name="project_list_number">1754</string>
     <string name="project_budget">$%1$s</string>
     <string name="project_burn">$%1$s</string>
-    <string name="project_burn_percent">%1$f%</string>
+    <string name="project_burn_percent">%1$s%%</string>
 
     <!--Project Detail Activity-->
     <string name="title_activity_project_detail">ProjectDetailActivity</string>

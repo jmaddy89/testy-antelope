@@ -1,5 +1,7 @@
 package com.aic.android.aicmobile;
 
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.res.Resources;
@@ -16,6 +18,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -29,6 +32,7 @@ import com.google.api.client.extensions.android.json.AndroidJsonFactory;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by jorda on 3/28/2017.
@@ -138,14 +142,13 @@ public class ProjectsListFragment extends Fragment {
 
     public void updateAdapter(String query) {
         mProjects = filter(mOriginalProjects, query);
-        Log.i(TAG, "Updated list is: " + mProjects);
-        Log.i(TAG, "Query is: " + query);
 
-//        mAdapter.notifyDataSetChanged();
         // This is currently working but rebuilds the adapter everytime any data is changed. Need
         // to get the notfydatasetchanged() to work
         setupAdapter();
     }
+
+
 
     private class ProjectHolder extends RecyclerView.ViewHolder
             implements View.OnClickListener {
@@ -196,6 +199,7 @@ public class ProjectsListFragment extends Fragment {
                 mProjectStatus.setText("Complete");
             }
 
+            // Sets icon based on customer name
             try {
                 String icon = "ic_" + mProject.getCustomer().replaceAll(" ", "_").toLowerCase();
                 int resId = res.getIdentifier(icon, "drawable", "com.aic.android.aicmobile");
@@ -204,11 +208,14 @@ public class ProjectsListFragment extends Fragment {
                 Log.e(TAG, "Failed to load icon: ", e);
             }
 
-//            float burnPercent = mProject.getBurn() / mProject.getBudget();
-//            mBurnPercent.setText(res.getString(R.string.project_burn_percent, burnPercent));
+            float burnPercent = mProject.getBurn() / mProject.getBudget() * 100;
+            mBurnPercent.setText(getString(R.string.project_burn_percent, String.format(Locale.US, "%.0f", burnPercent)));
+            percentAnimation(burnPercent);
 
             mBurnProgress.setMax(mProject.getBudget().intValue());
             mBurnProgress.setProgress(mProject.getBurn().intValue());
+            progressAnimation();
+
 
 //            if (mProject.getBurn() > mProject.getBudget()) {
 //                int colorId = res.getColor(R.color.project_list_progress_over);
@@ -220,6 +227,25 @@ public class ProjectsListFragment extends Fragment {
         @Override
         public void onClick(View v) {
             startProjectDetail(mProject);
+        }
+
+        private void progressAnimation() {
+            ObjectAnimator animation = ObjectAnimator.ofInt(mBurnProgress, "progress", 0, mProject.getBurn().intValue());
+            animation.setDuration(1500);
+            animation.setInterpolator(new DecelerateInterpolator(1.5f));
+            animation.start();
+        }
+
+        private void percentAnimation(float percent) {
+            ValueAnimator animation = ValueAnimator.ofFloat(0, percent);
+            animation.setDuration(1500);
+            animation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                @Override
+                public void onAnimationUpdate(ValueAnimator animation) {
+                    mBurnPercent.setText(getString(R.string.project_burn_percent, String.format(Locale.US, "%.0f", animation.getAnimatedValue())));
+                }
+            });
+            animation.start();
         }
     }
 
@@ -261,8 +287,10 @@ public class ProjectsListFragment extends Fragment {
         for (Projects model : models) {
             final String customer = model.getCustomer().toLowerCase();
             final String projectNumber = String.valueOf(model.getProjectNum());
+            final String description = String.valueOf(model.getProjectDesc());
 
-            if (customer.contains(lowerCaseQuery) || projectNumber.contains(lowerCaseQuery)) {
+            if (customer.contains(lowerCaseQuery) || projectNumber.contains(lowerCaseQuery) ||
+                    description.contains(lowerCaseQuery)) {
                 filteredProjects.add(model);
             }
         }

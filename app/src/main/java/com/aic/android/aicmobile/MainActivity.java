@@ -4,37 +4,46 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.annotation.VisibleForTesting;
+import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
-
-import com.aic.android.aicmobile.ProjectsActivity;
 import com.aic.android.aicmobile.backend.aicDataAPI.AicDataAPI;
+import com.aic.android.aicmobile.backend.aicDataAPI.model.MainPage;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.extensions.android.json.AndroidJsonFactory;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Calendar;
+import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final String TAG = "Main Page";
+
     private static final String APP_URL = "https://aic-mobile-5fdf1.appspot.com/_ah/api/";
+    private static final String ARG_DATE = "date";
 
     @VisibleForTesting
     public ProgressDialog mProgressDialog;
 
     private TextView mActiveProjectCount;
+    private TextView mCompleteProjectCount;
+    private TextView mOpenRFQCount;
     private CardView mProjectCard;
     private CardView mTimeEntryCard;
     private CardView mRFQCard;
     private Button mAddTimeEntry;
     private Button mAddRFQ;
+
+    private MainPage mMainPage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +69,12 @@ public class MainActivity extends AppCompatActivity {
         });
 
         mAddTimeEntry = (Button) findViewById(R.id.time_entry_add_new_button);
+        mAddTimeEntry.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addNewTimeEntry();
+            }
+        });
 
         //RFQ card
         mRFQCard = (CardView) findViewById(R.id.rfq_card_view);
@@ -73,13 +88,32 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        //Initialize active project count button on project card
-        mActiveProjectCount = (TextView) findViewById(R.id.project_active_count);
+        //Initialize text views
+        mActiveProjectCount = (TextView) findViewById(R.id.project_content_active_count);
+        mCompleteProjectCount = (TextView) findViewById(R.id.project_content_complete_count);
+        mOpenRFQCount = (TextView) findViewById(R.id.rfq_content_incomplete_count);
 
         //Start async task to get project count
-        new getActiveProjectCount().execute();
+        new getMainPage().execute();
 
     }
+
+    public void addNewTimeEntry() {
+        // Set calendar object to get correct date for time entry dialog
+        Calendar cal = Calendar.getInstance();
+        Date date = cal.getTime();
+
+        // Create bundle and put date into bundle
+        Bundle args = new Bundle();
+        args.putSerializable(ARG_DATE, date);
+
+        // Create fragment and bundle date into fragment
+        FragmentManager fm = getSupportFragmentManager();
+        TimeEntryAddFragment fragment = new TimeEntryAddFragment();
+
+        fragment.setArguments(args);
+        fragment.show(fm, "Add");
+        }
 
     public void showProgressDialog() {
         if (mProgressDialog == null) {
@@ -124,21 +158,25 @@ public class MainActivity extends AppCompatActivity {
         overridePendingTransition(R.anim.trans_left_in, R.anim.trans_left_out);
     }
 
-    public void updateProjectCard(String active) {
-        mActiveProjectCount.setText(active);
+    public void updateCards() {
+        mActiveProjectCount.setText(getString(R.string.project_content_active_count, mMainPage.getActiveProjects()));
+        mCompleteProjectCount.setText(getString(R.string.project_content_complete_count, mMainPage.getCompleteProjects()));
+        mOpenRFQCount.setText(getString(R.string.rfq_content_incomplete_count, mMainPage.getIncompleteRFQs()));
     }
 
-    private class getActiveProjectCount extends AsyncTask<Void, Void, String> {
+    private class getMainPage extends AsyncTask<Void, Void, MainPage> {
         private AicDataAPI myApiService = null;
-        private static final String TAG = "MainActivityAsyncTask";
 
         @Override
         protected void onPreExecute() {
-            super.onPreExecute();
+            Snackbar.make(findViewById(android.R.id.content), "Refreshing Data", Snackbar.LENGTH_LONG)
+                    .setAction("Action", null)
+                    .show();
+
         }
 
         @Override
-        protected String doInBackground(Void... params) {
+        protected MainPage doInBackground(Void... params) {
             if (myApiService == null) {
                 AicDataAPI.Builder builder = new AicDataAPI.Builder(AndroidHttp.newCompatibleTransport(), new AndroidJsonFactory(), null)
                         //Root url of google cloud project
@@ -146,20 +184,18 @@ public class MainActivity extends AppCompatActivity {
                 myApiService = builder.build();
             }
 
-
             try {
-                Log.i(TAG, "made it to the async task bit");
-                return myApiService.activeProjectCount().execute().getData();
+                return myApiService.getMainPage().execute();
             } catch (IOException e) {
-                Log.i(TAG, "IO Exception", e);
-                String fail = "fail";
-                return fail;
+
+                return new MainPage();
             }
         }
 
         @Override
-        protected void onPostExecute(String s) {
-            updateProjectCard(s + " active projects");
+        protected void onPostExecute(MainPage s) {
+            mMainPage = s;
+            updateCards();
         }
     }
 

@@ -25,12 +25,14 @@ public class DatePickerFragment extends DialogFragment {
     public static final String EXTRA_DATE = "com.bignerdranch.android.criminalintent.date";
 
     private static final String ARG_DATE = "date";
+    private static final String ARG_HEADER = "header";
 
     private DatePicker mDatePicker;
 
-    public static DatePickerFragment newInstance(Date date) {
+    public static DatePickerFragment newInstance(Date date, String header) {
         Bundle args = new Bundle();
         args.putSerializable(ARG_DATE, date);
+        args.putSerializable(ARG_HEADER, header);
 
         DatePickerFragment fragment = new DatePickerFragment();
         fragment.setArguments(args);
@@ -40,6 +42,7 @@ public class DatePickerFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         Date date = (Date) getArguments().getSerializable(ARG_DATE);
+        String header = (String) getArguments().getSerializable(ARG_HEADER);
 
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
@@ -55,7 +58,7 @@ public class DatePickerFragment extends DialogFragment {
 
         return new AlertDialog.Builder(getActivity())
                 .setView(v)
-                .setTitle(R.string.date_picker_title)
+                .setTitle(header)
                 .setPositiveButton(android.R.string.ok,
                         new DialogInterface.OnClickListener() {
                             @Override

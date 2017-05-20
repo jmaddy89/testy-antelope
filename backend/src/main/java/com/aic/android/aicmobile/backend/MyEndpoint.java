@@ -54,7 +54,7 @@ public class MyEndpoint {
 
             Class.forName(DRIVER);
 
-            String finalQuery = "SELECT proj_number, customer, description, budget, burn, project_status, aic_contact, customer_contact FROM aic.google_project_list WHERE (project_status=1 OR project_status=2) AND proj_number>100";
+            String finalQuery = "SELECT proj_id, proj_number, customer, description, budget, burn, project_status, aic_contact, customer_contact FROM aic.google_project_list WHERE (project_status=1 OR project_status=2) AND proj_number>100";
 
             try {
                 Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
@@ -65,6 +65,7 @@ public class MyEndpoint {
                 //Loop through result set and set project list
                 while (rs.next()) {
                     Projects proj = new Projects();
+                    proj.setProjectId(rs.getInt("proj_id"));
                     proj.setProjectNum(rs.getInt("proj_number"));
                     proj.setCustomer(rs.getString("customer"));
                     proj.setProjectDesc(rs.getString("description"));
@@ -90,15 +91,14 @@ public class MyEndpoint {
         return projects;
     }
 
-    @ApiMethod(name = "activeProjectCount")
-    public MyBean activeProjectCount() {
-        String s = null;
-
+    @ApiMethod(name = "getMainPage")
+    public MainPage getMainPage() {
+        MainPage mainPage = new MainPage();
         try {
 
             Class.forName(DRIVER);
 
-            String finalQuery = "SELECT COUNT(*) FROM aic.projects WHERE (project_status=1 OR project_status=2) AND co_number=0 AND option_number=0 AND proj_number>100";
+            String finalQuery = "SELECT * FROM aic.google_main_page";
 
             try {
                 Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
@@ -106,10 +106,11 @@ public class MyEndpoint {
 
                 ResultSet rs = stmt.executeQuery();
 
-                if (rs.next()) {
-                    s = rs.getString(1);
-                } else {
-                    s = "0";
+                while (rs.next()) {
+                    mainPage.setActiveProjects(rs.getInt("active_project_count"));
+                    mainPage.setCompleteProjects(rs.getInt("complete_project_count"));
+                    mainPage.setIncompleteRFQs(rs.getInt("incomplete_rfq_count"));
+                    mainPage.setCompleteRFQs(rs.getInt("pending_project_count"));
                 }
 
             } catch (Exception e) {
@@ -119,9 +120,7 @@ public class MyEndpoint {
 
         }
 
-        MyBean response = new MyBean();
-        response.setData(s);
-        return response;
+        return mainPage;
     }
 
     @ApiMethod(name = "getCustomerList")
@@ -239,6 +238,93 @@ public class MyEndpoint {
             return deliverables;
         }
         return deliverables;
+    }
+
+    @ApiMethod(name = "getRoles")
+    public List<TimeEntryRoles> getRoles(@Named("userId") String userId) {
+
+        List<TimeEntryRoles> roles = new ArrayList<>();
+        try {
+
+            Class.forName(DRIVER);
+
+            String finalQuery = "SELECT * FROM google_time_entry_roles WHERE firebase_id=?";
+
+            try {
+                Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+                PreparedStatement stmt = conn.prepareStatement(finalQuery);
+                stmt.setString(1, userId);
+
+                ResultSet rs = stmt.executeQuery();
+
+                //Loop through result set and set customer contact list
+                while (rs.next()) {
+                    TimeEntryRoles role = new TimeEntryRoles();
+                    role.setRoleId(rs.getInt("role_id"));
+                    role.setUserId(rs.getInt("user_id"));
+                    role.setRoleDesc(rs.getString("role_name"));
+                    roles.add(role);
+                }
+            } catch(Exception e) {
+                TimeEntryRoles fail = new TimeEntryRoles();
+                fail.setRoleDesc(e.toString());
+                roles.add(fail);
+                return roles;
+            }
+        } catch(Exception e) {
+            TimeEntryRoles fail = new TimeEntryRoles();
+            fail.setRoleDesc(e.toString());
+            roles.add(fail);
+            return roles;
+        }
+        return roles;
+    }
+
+    @ApiMethod(name = "submitTime")
+    public MyBean submitTime(NewTimeEntry timeInfo) {
+
+        String s = null;
+        try {
+
+            Class.forName(DRIVER);
+
+            String createTimeEntry = "INSERT INTO aic.time_entry(proj_id, project_number, user_id, role_id, deliverable_id, co_number, option_number, time, date, billable, notes) VALUES(?,?,?,?,?,?,?,?,?,?,?)";
+
+            try {
+                // Rebuild connection and statement
+                Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+                PreparedStatement stmt = conn.prepareStatement(createTimeEntry);
+
+                // Add data to fill in values corresponding with above query
+                stmt.setInt(1, timeInfo.getProjectId());
+                stmt.setInt(2, timeInfo.getProjectNumber());
+                stmt.setInt(3, timeInfo.getUserId());
+                stmt.setInt(4, timeInfo.getRoleId());
+                stmt.setInt(5, timeInfo.getDeliverableId());
+                stmt.setInt(6, timeInfo.getCoNumber());
+                stmt.setInt(7, timeInfo.getOptionNumber());
+                stmt.setFloat(8, timeInfo.getTime());
+                stmt.setString(9, timeInfo.getDate());
+                stmt.setBoolean(10, timeInfo.isBillable());
+                stmt.setString(11, timeInfo.getNote());
+
+                // Execute query
+                stmt.executeUpdate();
+
+                // Return response to indicate success!
+                s = "Time entry added successfully!";
+            } catch (SQLException e) {
+                MyBean sqlFail = new MyBean();
+                sqlFail.setData("Failed trying to add time: " + e.toString());
+                return sqlFail;
+            }
+        } catch(Exception e) {
+            MyBean totalFail = new MyBean();
+            totalFail.setData("Failed loading driver: " + e.toString());
+        }
+        MyBean result = new MyBean();
+        result.setData(s);
+        return result;
     }
 
     @ApiMethod(name = "submitRFQ")
@@ -448,6 +534,77 @@ public class MyEndpoint {
             time.add(totalFail);
         }
 
+        return time;
+    }
+
+    @ApiMethod(name = "submitWeekTime")
+    public MyBean submitWeekTime(TimeEntryRequestDayInfo request) {
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.YEAR, request.getYear());
+        cal.set(Calendar.WEEK_OF_YEAR, request.getWeekNumber());
+
+        // Set day of week to sunday
+        cal.set(Calendar.DAY_OF_WEEK, 1);
+
+        // Get start date
+        String startDate = sdf.format(cal.getTime());
+
+        // Add days to get to saturday as end date
+        cal.add(Calendar.DAY_OF_WEEK, 6);
+        String endDate = sdf.format(cal.getTime());
+
+        int userId = 0;
+
+
+        try {
+
+            Class.forName(DRIVER);
+            String userIdQuery = "SELECT id FROM aic.aic_emp_users WHERE firebase_id=?";
+
+            try {
+                Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+                PreparedStatement stmt = conn.prepareStatement(userIdQuery);
+                stmt.setString(1, request.getUserId());
+
+                ResultSet rs = stmt.executeQuery();
+
+                if (rs.next()) {
+                    userId = rs.getInt("id");
+                }
+            } catch (Exception e) {
+                MyBean queryFail = new MyBean();
+                queryFail.setData("Failed to find user id");
+                return queryFail;
+            }
+
+            String timeQuery = "UPDATE aic.time_entry SET submitted=1 WHERE user_id=? and date BETWEEN ? AND ?";
+
+            try {
+                Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+                PreparedStatement stmt = conn.prepareStatement(timeQuery);
+                stmt.setInt(1, userId);
+                stmt.setString(2, startDate);
+                stmt.setString(3, endDate);
+
+                stmt.executeUpdate();
+
+            } catch(Exception e) {
+                MyBean queryFail = new MyBean();
+                queryFail.setData("Failed to submit time, try again");
+                return queryFail;
+            }
+
+        } catch(Exception e) {
+            MyBean queryFail = new MyBean();
+            queryFail.setData("Failed to load driver");
+            return queryFail;
+        }
+
+        MyBean time = new MyBean();
+        time.setData("Time submitted successfully!");
         return time;
     }
 }
