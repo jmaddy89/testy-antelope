@@ -27,8 +27,7 @@
         <activity
             android:name=".ProjectDetailActivity"
             android:parentActivityName=".ProjectsActivity"
-            android:label="@string/title_activity_project_detail"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:label="@string/title_activity_project_detail">
         </activity>
         <activity android:name=".EmailPasswordActivity">
             <intent-filter>

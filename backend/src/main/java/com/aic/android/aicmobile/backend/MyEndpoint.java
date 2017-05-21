@@ -607,4 +607,38 @@ public class MyEndpoint {
         time.setData("Time submitted successfully!");
         return time;
     }
+
+    @ApiMethod(name = "getProjectBreakdown")
+    public ProjectBreakdown getProjectBreakdown(@Named("projectNumber") int projectNumber) {
+        ProjectBreakdown breakdown = new ProjectBreakdown();
+        try {
+
+            Class.forName(DRIVER);
+
+            String finalQuery = "SELECT * FROM aic.google_project_detail_breakdown WHERE proj_number=?";
+
+            try {
+                Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+                PreparedStatement stmt = conn.prepareStatement(finalQuery);
+                stmt.setInt(1, projectNumber);
+
+                ResultSet rs = stmt.executeQuery();
+
+                while (rs.next()) {
+                    breakdown.setProjNumber(rs.getInt("proj_number"));
+                    breakdown.setLaborBudget(rs.getFloat("labor"));
+                    breakdown.setMaterialBudget(rs.getFloat("material"));
+                    breakdown.setSubcontractorBudget(rs.getFloat("subcontractor"));
+                    breakdown.setContingencyBudget(rs.getFloat("contingency"));
+                }
+
+            } catch (Exception e) {
+
+            }
+        } catch (Exception e) {
+
+        }
+
+        return breakdown;
+    }
 }

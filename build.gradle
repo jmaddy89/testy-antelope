@@ -16,6 +16,8 @@ buildscript {
 allprojects {
     repositories {
         jcenter()
+        // Dependency for graphs
+        maven { url "https://jitpack.io" }
     }
 }
 

@@ -134,7 +134,6 @@ public class ProjectsListFragment extends Fragment {
     public void setupAdapter() {
 
         if (isAdded()) {
-            Log.i(TAG, "adding adapter");
             mAdapter = new ProjectAdapter(mProjects);
             mProjectRecyclerView.setAdapter(mAdapter);
         }
