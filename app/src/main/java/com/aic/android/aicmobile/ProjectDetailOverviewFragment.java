@@ -178,7 +178,7 @@ Asychrounous task to download project list
 
         @Override
         protected void onPreExecute() {
-            this.dialog.setMessage("Loading projects");
+            this.dialog.setMessage("Loading project data");
             this.dialog.show();
         }
 
