@@ -37,6 +37,12 @@ public class SectionPagerAdapter extends FragmentPagerAdapter {
                 return "Overview";
             case 1:
                 return "Chat";
+            case 2:
+                return "Expenses";
+            case 3:
+                return "Change Orders";
+            case 4:
+                return "Time Entries";
             default:
                 return "Second Tab";
         }

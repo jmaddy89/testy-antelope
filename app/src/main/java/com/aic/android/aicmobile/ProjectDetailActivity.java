@@ -46,7 +46,10 @@ public class ProjectDetailActivity extends AppCompatActivity {
         tabLayout.addTab(tabLayout.newTab().setText("Overview"));
         tabLayout.addTab(tabLayout.newTab().setText("Chat"));
         tabLayout.addTab(tabLayout.newTab().setText("Expenses"));
-        tabLayout.addTab(tabLayout.newTab().setText("Time"));
+        tabLayout.addTab(tabLayout.newTab().setText("Change Orders"));
+        tabLayout.addTab(tabLayout.newTab().setText("Time Entries"));
+
+        tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
 
         Bundle bundle = new Bundle();
         bundle.putSerializable(PROJ_NUMBER, mProject.getProjectNum());
@@ -55,6 +58,9 @@ public class ProjectDetailActivity extends AppCompatActivity {
         List<Fragment> fragments = new Vector<Fragment>();
         fragments.add(Fragment.instantiate(this, ProjectDetailOverviewFragment.class.getName(), bundle));
         fragments.add(Fragment.instantiate(this, ProjectDetailChatFragment.class.getName()));
+        fragments.add(Fragment.instantiate(this, ProjectDetailExpensesFragment.class.getName(), bundle));
+        fragments.add(Fragment.instantiate(this, ProjectDetailChangeOrderFragment.class.getName()));
+        fragments.add(Fragment.instantiate(this, ProjectDetailTimeFragment.class.getName()));
 
         // Attaching fragments into tabLayout with ViewPager
         viewPager.setAdapter(new SectionPagerAdapter(getSupportFragmentManager(), fragments));

@@ -38,7 +38,6 @@ import java.util.List;
 public class ProjectDetailOverviewFragment extends Fragment {
 
     private static final String APP_URL = "https://aic-mobile-5fdf1.appspot.com/_ah/api/";
-
     private static final String PROJ_NUMBER = "0";
 
 
@@ -53,13 +52,9 @@ public class ProjectDetailOverviewFragment extends Fragment {
 
         mProjects.setProjectNum((int) getArguments().getSerializable(PROJ_NUMBER));
 
-
         mBreakdownChart = (PieChart) v.findViewById(R.id.project_detail_overview_breakdown_chart);
 
-
-
         new getProjectBreakdown().execute(mProjects.getProjectNum());
-
 
         return v;
     }

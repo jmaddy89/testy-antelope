@@ -65,6 +65,7 @@ public class ProjectsListFragment extends Fragment {
         //Enable options menu
         setHasOptionsMenu(true);
 
+        //Download project list from database
         updateItems();
     }
 
@@ -76,9 +77,6 @@ public class ProjectsListFragment extends Fragment {
 
         mProjectRecyclerView = (RecyclerView) view.findViewById(R.id.project_recycler_view);
         mProjectRecyclerView.setLayoutManager(layoutManager);
-
-
-
 
         return view;
     }

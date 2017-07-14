@@ -102,4 +102,9 @@
     <string name="title_activity_project_detail">ProjectDetailActivity</string>
     <string name="action_settings">Settings</string>
     <string name="project_detail_overview_breakdown_header">Project Budget Breakdown</string>
+
+    <!--Project Detail Expenses Fragment-->
+    <string name="project_detail_expenses_vendor">Shingle and Gibb</string>
+    <string name="project_detail_expenses_notes">Materials for Project</string>
+    <string name="project_detail_expenses_amount">$186.24</string>
 </resources>
