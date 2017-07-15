@@ -106,5 +106,6 @@
     <!--Project Detail Expenses Fragment-->
     <string name="project_detail_expenses_vendor">Shingle and Gibb</string>
     <string name="project_detail_expenses_notes">Materials for Project</string>
-    <string name="project_detail_expenses_amount">$186.24</string>
+    <string name="project_detail_expenses_amount">$%1$s</string>
+    <string name="project_detail_expenses_category">Materials</string>
 </resources>

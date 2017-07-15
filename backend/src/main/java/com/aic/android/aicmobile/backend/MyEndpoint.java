@@ -641,4 +641,52 @@ public class MyEndpoint {
 
         return breakdown;
     }
+
+    @ApiMethod(name = "getExpenses")
+    public List<Expenses> getExpenses(@Named("projectNumber") int projectNumber) {
+        List<Expenses> expenses = new ArrayList<>();
+
+        try {
+
+            Class.forName(DRIVER);
+
+            String timeQuery = "SELECT * FROM aic.google_expenses WHERE proj_number=?";
+
+            try {
+                Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+                PreparedStatement stmt = conn.prepareStatement(timeQuery);
+                stmt.setInt(1, projectNumber);
+
+                ResultSet rs = stmt.executeQuery();
+
+                // Loop through results and build list
+                while (rs.next()) {
+                    Expenses expense = new Expenses();
+
+                    expense.setPoNumber(rs.getInt("po_number"));
+                    expense.setAmount(rs.getFloat("amount"));
+                    expense.setCategory(rs.getString("category"));
+                    expense.setDate(rs.getString("date"));
+                    expense.setNotes(rs.getString("notes"));
+                    expense.setVendor(rs.getString("vendor"));
+
+                    expenses.add(expense);
+                }
+
+            } catch(Exception e) {
+                Expenses queryFail = new Expenses();
+                queryFail.setCategory("Failed getting project number: " + e.toString());
+                expenses.add(queryFail);
+                return expenses;
+            }
+
+        } catch(Exception e) {
+            Expenses totalFail = new Expenses();
+            totalFail.setCategory("Failed loading driver: " + e.toString());
+            expenses.add(totalFail);
+        }
+
+        return expenses;
+    }
+
 }
